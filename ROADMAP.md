@@ -55,10 +55,14 @@ Plan de transformare din prototip single-file într-un SaaS complet, pregătit p
 - [x] Export Word + PDF disponibil și în NoticeModule
 - [ ] Template-uri salvabile / reutilizabile — opțional, ulterior
 
-### 🎨 Faza 5 — Landing premium
-- [ ] Redesign landing
-- [ ] Animații **Three.js** (hero) + **GSAP** (scroll/secțiuni)
-- [ ] SEO + performanță
+### ✅ Faza 5 — Landing premium (gata)
+- [x] **Three.js hero** 3D: torus knot + icosaedre wireframe + nor de particule + paralaxă mouse (lazy-loaded)
+- [x] **GSAP ScrollTrigger**: feature cards, steps, pricing, testimoniale — stagger reveal la scroll
+- [x] Secțiuni noi: „Cum funcționează" (3 pași), Testimoniale, CTA final
+- [x] Feature cards cu hover lift + badge-uri contextuale (Popular, Nou)
+- [x] Toggle lunar/anual prețuri; Starter cu 60 credite / Pro cu 200 credite
+- [x] **SEO complet**: meta description, OG, Twitter Card, JSON-LD structured data, canonical
+- [x] Footer extins: badges GDPR/Made in RO/AI-Powered, hover pe linkuri
 
 ### 🚀 Faza 6 — Pregătire producție
 - [ ] Rate limiting + abuse protection
