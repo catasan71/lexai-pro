@@ -1,0 +1,57 @@
+/** Catalogul de tipuri de contracte, grupate pe categorii. */
+export const CONTRACT_TYPES: Record<string, string[]> = {
+  "📋 Comerciale": [
+    "Contract de Prestări Servicii (Cod Civil art. 1851)",
+    "Contract de Vânzare-Cumpărare Comercială",
+    "Contract de Distribuție Exclusivă",
+    "Contract de Agenție Comercială (Legea 509/2002)",
+    "Contract de Mandat Comercial",
+    "Contract de Comision (Cod Civil art. 2043)",
+    "Contract de Franciză (OG 52/1997)",
+    "Contract Colaborare / Asociere în Participațiune",
+    "Contract de Furnizare Produse / Bunuri",
+    "Contract de Intermediere Comercială",
+  ],
+  "🏠 Imobiliare": [
+    "Contract de Închiriere / Locațiune (Cod Civil art. 1777)",
+    "Contract de Comodat (Împrumut de Folosință)",
+    "Contract de Subînchiriere",
+    "Contract de Administrare Imobil",
+    "Promisiune Bilaterală de Vânzare-Cumpărare Imobil",
+  ],
+  "💰 Financiare": [
+    "Contract de Împrumut cu Dobândă (OG 13/2011)",
+    "Contract de Împrumut fără Dobândă",
+    "Contract de Cesiune de Creanță (Cod Civil art. 1566)",
+    "Contract de Fidejusiune / Garanție Personală",
+    "Angajament de Plată / Recunoaștere Datorie",
+  ],
+  "👥 Muncă & HR": [
+    "Contract Individual de Muncă — CIM (Legea 53/2003)",
+    "Contract de Muncă cu Timp Parțial",
+    "Contract Telemuncă (Legea 81/2018)",
+    "Convenție Civilă de Prestări Servicii (PFA)",
+    "Contract de Ucenicie (Legea 279/2005)",
+  ],
+  "💡 IT & PI": [
+    "Contract de Licență Software (Legea 8/1996)",
+    "Contract de Dezvoltare Software / Aplicație Web",
+    "Contract de Mentenanță și Suport IT",
+    "Contract de Cesiune Drepturi de Autor",
+    "Acord de Confidențialitate — NDA",
+  ],
+  "🏢 Societare": [
+    "Act Adițional la Statut SRL (Legea 31/1990)",
+    "Acord Asociați / Shareholders Agreement",
+    "Contract de Administrare Societate",
+    "Contract de Consultanță și Consiliere Juridică",
+    "Pact de Opțiune / Drept de Preempțiune",
+  ],
+  "📦 Logistică": [
+    "Contract de Transport Marfă (OG 27/2011)",
+    "Contract de Depozit / Custodie Bunuri",
+    "Contract de Antrepriză / Execuție Lucrări",
+    "Contract de Proiectare Arhitecturală",
+    "Contract de Service și Reparații Echipamente",
+  ],
+};

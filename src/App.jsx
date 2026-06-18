@@ -1,4 +1,8 @@
 import { useState, useEffect, useRef } from "react";
+import { callClaude, extractJSON } from "./lib/claude";
+import { extractPdfText } from "./lib/pdf";
+import { CONTRACT_TYPES } from "./data/contractTypes";
+import { EMAIL_TYPES, EMAIL_TONES } from "./data/emailTypes";
 
 function useIsMobile(bp = 768) {
   const [m, setM] = useState(() => typeof window !== "undefined" ? window.innerWidth < bp : false);
@@ -57,61 +61,6 @@ function ParticlesBg() {
     return () => { cancelAnimationFrame(id); window.removeEventListener("resize",sz); };
   },[]);
   return <canvas ref={ref} style={{ position:"fixed",inset:0,width:"100%",height:"100%",zIndex:0,pointerEvents:"none" }} />;
-}
-
-// Safe JSON extractor — no regex, uses indexOf only
-function extractJSON(txt) {
-  if (!txt) throw new Error("Raspuns gol de la API");
-  var s = txt;
-  // strip markdown fences
-  var fence = "```";
-  while (s.indexOf(fence) !== -1) {
-    var fi = s.indexOf(fence);
-    var fe = s.indexOf(fence, fi + 3);
-    if (fe === -1) { s = s.slice(0, fi); break; }
-    s = s.slice(0, fi) + s.slice(fe + 3);
-  }
-  s = s.trim();
-  // try parse directly
-  try { return JSON.parse(s); } catch(_) {}
-  // try array: find first [ and matching last ]
-  var ai = s.indexOf("[");
-  var ae = s.lastIndexOf("]");
-  if (ai !== -1 && ae > ai) {
-    try { return JSON.parse(s.slice(ai, ae + 1)); } catch(_) {}
-  }
-  // try object: find first { and matching last }
-  var oi = s.indexOf("{");
-  var oe = s.lastIndexOf("}");
-  if (oi !== -1 && oe > oi) {
-    try { return JSON.parse(s.slice(oi, oe + 1)); } catch(_) {}
-  }
-  var preview = txt.slice(0, 100).split("\n").join(" ");
-  throw new Error("JSON invalid. Inceput raspuns: " + preview);
-}
-
-// Universal API caller
-async function callClaude(prompt, maxTokens) {
-  var r = await fetch("/api/claude", {
-    method: "POST",
-    headers: { "Content-Type": "application/json" },
-    body: JSON.stringify({
-      model: "claude-sonnet-4-5",
-      max_tokens: maxTokens || 1000,
-      messages: [{ role: "user", content: prompt }]
-    })
-  });
-  var data = await r.json();
-  console.log("Claude response:", JSON.stringify(data).slice(0, 600));
-  if (data.error) throw new Error("API: " + (data.error.message || JSON.stringify(data.error)));
-  if (!r.ok) throw new Error("HTTP " + r.status);
-  if (!data.content || !data.content.length) throw new Error("Raspuns gol: " + JSON.stringify(data).slice(0,200));
-  var textBlock = null;
-  for (var i = 0; i < data.content.length; i++) {
-    if (data.content[i].type === "text") { textBlock = data.content[i].text; break; }
-  }
-  if (!textBlock) throw new Error("Niciun bloc text in raspuns");
-  return textBlock;
 }
 
 function Modal({ type, onClose }) {
@@ -346,16 +295,6 @@ function LandingPage({ onEnterApp }) {
   );
 }
 
-const CONTRACT_TYPES = {
-  "📋 Comerciale":["Contract de Prestări Servicii (Cod Civil art. 1851)","Contract de Vânzare-Cumpărare Comercială","Contract de Distribuție Exclusivă","Contract de Agenție Comercială (Legea 509/2002)","Contract de Mandat Comercial","Contract de Comision (Cod Civil art. 2043)","Contract de Franciză (OG 52/1997)","Contract Colaborare / Asociere în Participațiune","Contract de Furnizare Produse / Bunuri","Contract de Intermediere Comercială"],
-  "🏠 Imobiliare":["Contract de Închiriere / Locațiune (Cod Civil art. 1777)","Contract de Comodat (Împrumut de Folosință)","Contract de Subînchiriere","Contract de Administrare Imobil","Promisiune Bilaterală de Vânzare-Cumpărare Imobil"],
-  "💰 Financiare":["Contract de Împrumut cu Dobândă (OG 13/2011)","Contract de Împrumut fără Dobândă","Contract de Cesiune de Creanță (Cod Civil art. 1566)","Contract de Fidejusiune / Garanție Personală","Angajament de Plată / Recunoaștere Datorie"],
-  "👥 Muncă & HR":["Contract Individual de Muncă — CIM (Legea 53/2003)","Contract de Muncă cu Timp Parțial","Contract Telemuncă (Legea 81/2018)","Convenție Civilă de Prestări Servicii (PFA)","Contract de Ucenicie (Legea 279/2005)"],
-  "💡 IT & PI":["Contract de Licență Software (Legea 8/1996)","Contract de Dezvoltare Software / Aplicație Web","Contract de Mentenanță și Suport IT","Contract de Cesiune Drepturi de Autor","Acord de Confidențialitate — NDA"],
-  "🏢 Societare":["Act Adițional la Statut SRL (Legea 31/1990)","Acord Asociați / Shareholders Agreement","Contract de Administrare Societate","Contract de Consultanță și Consiliere Juridică","Pact de Opțiune / Drept de Preempțiune"],
-  "📦 Logistică":["Contract de Transport Marfă (OG 27/2011)","Contract de Depozit / Custodie Bunuri","Contract de Antrepriză / Execuție Lucrări","Contract de Proiectare Arhitecturală","Contract de Service și Reparații Echipamente"]
-};
-
 function Spinner() {
   return <span style={{ width:14,height:14,border:"2px solid rgba(255,255,255,.25)",borderTop:"2px solid currentColor",borderRadius:"50%",animation:"spin .8s linear infinite",display:"inline-block",flexShrink:0 }} />;
 }
@@ -378,7 +317,7 @@ function ContractModule({ showToast }) {
     setLoadC(true);
     try {
       var prompt = "Esti expert juridic roman. Pentru contractul de tip: " + form.contractType + "\nSugereaza exact 6 clauze speciale importante.\nRaspunde DOAR cu un array JSON, fara alt text, fara markdown:\n[{\"titlu\":\"Titlul clauzei\",\"descriere\":\"Descriere scurta a clauzei\",\"text\":\"Textul juridic complet al clauzei\"}]";
-      var txt = await callClaude(prompt, 2000);
+      var txt = await callClaude("clauses", prompt);
       var parsed = extractJSON(txt);
       if (!Array.isArray(parsed)) throw new Error("Raspunsul nu este un array JSON");
       setClauses(parsed);
@@ -398,7 +337,7 @@ function ContractModule({ showToast }) {
     var extra = selC.length ? "\n\nCLAUZE SPECIALE:\n" + selC.map(function(c,i){ return (i+1)+". "+c.titlu+": "+c.text; }).join("\n") : "";
     try {
       var prompt = "Redacteaza un contract complet in romana juridica formala, cu articole numerotate, conform legislatiei romane in vigoare.\n\nTIP CONTRACT: " + form.contractType + "\nPARTEA 1 (Furnizor): " + (form.p1Name||"_____") + ", CUI: " + (form.p1CUI||"_____") + ", Reg.Com.: " + (form.p1Reg||"_____") + ", Sediu: " + (form.p1Address||"_____") + ", Reprezentant: " + (form.p1Rep||"_____") + ", Email: " + (form.p1Email||"_____") + "\nPARTEA 2 (Beneficiar): " + (form.p2Name||"_____") + ", CUI: " + (form.p2CUI||"_____") + ", Reg.Com.: " + (form.p2Reg||"_____") + ", Sediu: " + (form.p2Address||"_____") + ", Reprezentant: " + (form.p2Rep||"_____") + ", Email: " + (form.p2Email||"_____") + "\nNr. contract: " + form.contractNo + "\nData: " + form.contractDate + "\nLocul incheierii: " + (form.location||"Bucuresti") + "\nScadenta: " + (form.dueDate||"_____") + "\nValoare: " + (form.value||"_____") + " " + form.currency + "\nPenalitati: " + form.penalties + "%/zi\nDurata: " + form.duration + "\nObiectul contractului: " + (form.object||"_____") + extra;
-      var txt = await callClaude(prompt, 4000);
+      var txt = await callClaude("contract", prompt);
       if (!txt) throw new Error("Raspuns gol");
       setContract(txt);
       showToast("Contract generat cu succes!", "success");
@@ -513,8 +452,8 @@ function ContractModule({ showToast }) {
 function EmailModule({ showToast }) {
   const isMobile = useIsMobile();
   const [panel, setPanel] = useState("form");
-  const emailTypes = ["Emitere factură nouă","Reminder scadență","Notificare întârziere plată","Somare plată","Confirmare plată primită","Ofertă comercială","Follow-up ofertă nesoluționată","Confirmare comandă","Notificare livrare/finalizare serviciu","Transmitere contract spre semnare","Notificare reziliere contract","Punere în întârziere (Cod Civil)"];
-  const tones = [{v:"formal-juridic",l:"🎩 Formal-Juridic"},{v:"profesional",l:"💼 Profesional"},{v:"prietenos",l:"🤝 Prietenos"},{v:"urgent",l:"⚡ Urgent"},{v:"ferm",l:"🧊 Ferm"}];
+  const emailTypes = EMAIL_TYPES;
+  const tones = EMAIL_TONES;
   const [form, setForm] = useState({ emailType:"Emitere factură nouă",tone:"profesional",from:"",toName:"",toCompany:"",invoiceNo:"",amount:"",dueDate:"",details:"",language:"română" });
   const [result, setResult] = useState(null);
   const [loading, setLoading] = useState(false);
@@ -526,7 +465,7 @@ function EmailModule({ showToast }) {
     setLoading(true);
     try {
       var prompt = "Genereaza un email business profesional in " + form.language + ".\nTip email: " + form.emailType + "\nTon: " + form.tone + "\nDe la: " + (form.from||"Compania noastra") + "\nCatre: " + (form.toName||"Client") + " (" + (form.toCompany||"") + ")\nNr. factura: " + (form.invoiceNo||"-") + "\nSuma: " + (form.amount||"-") + " RON\nScadenta: " + (form.dueDate||"-") + "\nDetalii: " + (form.details||"-") + "\n\nRaspunde DOAR cu JSON, fara alt text, fara markdown:\n{\"subiect\":\"subiectul emailului\",\"corp\":\"corpul complet al emailului\"}";
-      var txt = await callClaude(prompt, 1200);
+      var txt = await callClaude("email", prompt);
       var parsed = extractJSON(txt);
       if (!parsed.subiect || !parsed.corp) throw new Error("Raspuns incomplet — lipsesc campuri");
       setResult(parsed);
@@ -633,16 +572,15 @@ function AnalysisModule({ showToast }) {
         setText(res.value);
       } else { showToast("Mammoth nu este disponibil.", "error"); }
     } else if (ext === "pdf") {
-      var reader = new FileReader();
-      reader.onload = async function(e) {
-        var b64 = e.target.result.split(",")[1];
-        try {
-          var txt = await callClaude([{ type:"document", source:{ type:"base64", media_type:"application/pdf", data:b64 } }, { type:"text", text:"Extrage textul complet din acest PDF. Raspunde doar cu textul extras, fara alte comentarii." }], 4000);
-          setText(txt);
-          showToast("PDF procesat!", "success");
-        } catch(err) { showToast("Eroare PDF: " + err.message, "error"); }
-      };
-      reader.readAsDataURL(f);
+      // Extragere text client-side (pdf.js) — gratuit, fără apel Claude.
+      try {
+        var pdfTxt = await extractPdfText(f);
+        if (!pdfTxt) throw new Error("Nu am găsit text în PDF (poate fi scanat/imagine).");
+        setText(pdfTxt);
+        showToast("PDF procesat!", "success");
+      } catch(err) { showToast("Eroare PDF: " + err.message, "error"); }
+    } else {
+      showToast("Format nesuportat. Folosește PDF, DOCX sau TXT.", "error");
     }
   };
 
@@ -651,7 +589,7 @@ function AnalysisModule({ showToast }) {
     try {
       var contractText = text.slice(0, 6000);
       var prompt = "Esti expert juridic roman. Analizeaza contractul de mai jos si returneaza EXCLUSIV JSON valid, fara markdown, fara text inainte sau dupa.\nStructura JSON ceruta:\n{\"rezumat\":{\"tip\":\"tipul contractului\",\"parti\":\"partile implicate\",\"valoare\":\"valoarea\",\"durata\":\"durata\",\"scor\":\"Scazut sau Mediu sau Ridicat sau Critic\"},\"riscuri\":[{\"titlu\":\"titlu risc\",\"categorie\":\"Financiar sau Juridic sau Operational sau Fiscal\",\"severitate\":\"Critic sau Ridicat sau Mediu sau Scazut\",\"descriere\":\"descriere\",\"clauza\":\"textul clauzei\",\"remediere\":\"cum se remediaza\"}],\"clauze_lipsa\":[{\"titlu\":\"clauza lipsa\",\"importanta\":\"de ce e importanta\",\"sugestie\":\"text sugerat\"}],\"recomandari\":[\"recomandare 1\",\"recomandare 2\"],\"avocat\":{\"necesar\":true,\"motiv\":\"motivul\"}}\n\nCONTRACT:\n" + contractText;
-      var txt = await callClaude(prompt, 4000);
+      var txt = await callClaude("analysis", prompt);
       var parsed = extractJSON(txt);
       setResult(parsed);
       showToast("Analiză completă!", "success");
