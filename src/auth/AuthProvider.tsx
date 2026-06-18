@@ -60,6 +60,19 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     return () => sub.subscription.unsubscribe();
   }, []);
 
+  // Actualizează creditele afișate instant după fiecare apel AI reușit,
+  // fără un round-trip suplimentar la DB (valoarea vine din header-ul proxy-ului).
+  useEffect(() => {
+    function onCreditsUpdated(e: Event) {
+      const credits = (e as CustomEvent<{ credits: number }>).detail?.credits;
+      if (typeof credits === "number") {
+        setProfile((p) => (p ? { ...p, credits } : p));
+      }
+    }
+    window.addEventListener("lexai:credits-updated", onCreditsUpdated);
+    return () => window.removeEventListener("lexai:credits-updated", onCreditsUpdated);
+  }, []);
+
   async function signUp(email: string, password: string, fullName: string) {
     if (!supabase) throw new Error("Supabase nu este configurat.");
     const { error } = await supabase.auth.signUp({

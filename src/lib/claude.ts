@@ -1,8 +1,14 @@
 /**
  * Client centralizat pentru proxy-ul Anthropic (`/api/claude`).
  * Cheia API rămâne pe server — vezi `api/claude.js`.
+ *
+ * Dacă userul e autentificat, trimite JWT-ul în Authorization header.
+ * Proxy-ul consumă creditele atomic înainte de apelul Anthropic.
+ * La răspuns, creditele rămase ajung în header-ul `x-credits-remaining`
+ * și sunt propagate în UI prin evenimentul `lexai:credits-updated`.
  */
 import { TASK_CONFIG, type AiTask } from "./models";
+import { supabase } from "./supabase";
 
 export type ContentBlock =
   | { type: "text"; text: string }
@@ -22,7 +28,6 @@ export function extractJSON<T = unknown>(txt: string): T {
   let s = txt;
   const fence = "```";
   // Dacă răspunsul e într-un bloc ```...```, păstrăm conținutul DINTRE garduri
-  // (un eventual tag de limbaj rămas, ex. "json", e tăiat de extragerea de obiect/array de mai jos).
   const fi = s.indexOf(fence);
   if (fi !== -1) {
     const fe = s.indexOf(fence, fi + 3);
@@ -60,29 +65,55 @@ export function extractJSON<T = unknown>(txt: string): T {
 
 /**
  * Apel către Claude pentru o anumită acțiune. Modelul și max_tokens sunt
- * derivate din `TASK_CONFIG[task]` — vezi `models.ts`.
+ * derivate din `TASK_CONFIG[task]`. JWT-ul userului e trimis automat dacă
+ * există sesiune activă — proxy-ul consumă creditele server-side.
  */
 export async function callClaude(task: AiTask, content: string | ContentBlock[]): Promise<string> {
   const cfg = TASK_CONFIG[task];
-  const messageContent = typeof content === "string" ? content : content;
+
+  const headers: Record<string, string> = { "Content-Type": "application/json" };
+
+  // Atașează JWT dacă userul e autentificat
+  if (supabase) {
+    const { data } = await supabase.auth.getSession();
+    if (data.session?.access_token) {
+      headers["Authorization"] = `Bearer ${data.session.access_token}`;
+    }
+  }
 
   const r = await fetch("/api/claude", {
     method: "POST",
-    headers: { "Content-Type": "application/json" },
+    headers,
     body: JSON.stringify({
+      task,                    // citit de proxy pentru cost; nu ajunge la Anthropic
       model: cfg.model,
       max_tokens: cfg.maxTokens,
-      messages: [{ role: "user", content: messageContent }],
+      messages: [{ role: "user", content }],
     }),
   });
 
+  // 402 = credite insuficiente
+  if (r.status === 402) {
+    const body = await r.json().catch(() => ({})) as { error?: { message?: string } };
+    throw new Error(body.error?.message ?? "Credite insuficiente.");
+  }
+
   const data: AnthropicResponse = await r.json();
-  if (data.error) throw new Error("API: " + (data.error.message || JSON.stringify(data.error)));
+  if (data.error) throw new Error("API: " + (data.error.message ?? JSON.stringify(data.error)));
   if (!r.ok) throw new Error("HTTP " + r.status);
-  if (!data.content || !data.content.length) {
+  if (!data.content?.length) {
     throw new Error("Raspuns gol: " + JSON.stringify(data).slice(0, 200));
   }
   const textBlock = data.content.find((b) => b.type === "text")?.text;
   if (!textBlock) throw new Error("Niciun bloc text in raspuns");
+
+  // Propagă creditele rămase în UI fără a refresha din DB
+  const remaining = r.headers.get("x-credits-remaining");
+  if (remaining !== null) {
+    window.dispatchEvent(
+      new CustomEvent("lexai:credits-updated", { detail: { credits: Number(remaining) } })
+    );
+  }
+
   return textBlock;
 }
