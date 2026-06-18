@@ -19,15 +19,16 @@ Plan de transformare din prototip single-file într-un SaaS complet, pregătit p
 ### ✅ Faza 0 — Baseline (gata)
 - Dependențe instalate, build verificat (205 KB).
 
-### 🔨 Faza 1 — Fundație tehnică *(în curs)*
+### ✅ Faza 1 — Fundație tehnică (gata)
 - [x] Setup TypeScript (migrare incrementală, `allowJs`) + Prettier
 - [x] Setup Vitest + Testing Library + primele teste (10 ✓)
 - [x] Client API centralizat (`src/lib/claude.ts`) + config modele (`src/lib/models.ts`) cu modele AI noi
 - [x] **Optimizare cost analiză:** extragere PDF client-side cu `pdf.js`, lazy-loaded (elimină apelul Claude scump)
 - [x] Date extrase în module (`src/data/`), design tokens create (`src/styles/theme.ts`)
-- [ ] Restructurare completă: split `App.jsx` în componente `.tsx` (modules/pages/components) *(următorul pas)*
+- [x] Split `App.jsx` (800 linii) în structură: `hooks/ components/ pages/ modules/ styles/`
+- [ ] Rest de migrare TS: 3 module + LandingPage (`.jsx` → `.tsx`) — incremental
 - [ ] ESLint (flat config) — amânat
-- [ ] Aplicare design tokens în toate componentele
+- [ ] Aplicare design tokens în toate componentele — incremental
 
 ### 📦 Faza 2 — Conturi & persistență
 - [ ] Auth Supabase (email/parolă + OAuth Google)
