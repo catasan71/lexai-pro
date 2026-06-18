@@ -30,11 +30,12 @@ Plan de transformare din prototip single-file într-un SaaS complet, pregătit p
 - [ ] ESLint (flat config) — amânat
 - [ ] Aplicare design tokens în toate componentele — incremental
 
-### 📦 Faza 2 — Conturi & persistență
-- [ ] Auth Supabase (email/parolă + OAuth Google)
-- [ ] Schema DB: users, profiles, documents, usage_log
-- [ ] Istoric: salvare contracte/emailuri/analize per utilizator
-- [ ] Dashboard cont (profil, istoric, consum credite)
+### ✅ Faza 2 — Conturi & persistență (gata)
+- [x] Auth Supabase (email/parolă + OAuth Google) — `AuthProvider` + `AuthModal`
+- [x] Schema DB live: profiles, documents, usage_log + RLS + `consume_credits()`
+- [x] Istoric: salvare automată contracte/emailuri/analize per utilizator
+- [x] Dashboard: credite afișate, deconectare, tab „Istoric"
+- [ ] Pagină „Cont" dedicată (profil editabil, statistici consum) — opțional, ulterior
 
 ### 💳 Faza 3 — Monetizare (credite + Revolut)
 - [ ] Schema credite: planuri, abonamente, tranzacții, solduri
