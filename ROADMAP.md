@@ -37,12 +37,14 @@ Plan de transformare din prototip single-file într-un SaaS complet, pregătit p
 - [x] Dashboard: credite afișate, deconectare, tab „Istoric"
 - [ ] Pagină „Cont" dedicată (profil editabil, statistici consum) — opțional, ulterior
 
-### 💳 Faza 3 — Monetizare (credite + Revolut)
-- [ ] Schema credite: planuri, abonamente, tranzacții, solduri
-- [ ] Integrare Revolut Merchant API (checkout + webhooks)
-- [ ] Logică abonament recurent + top-up one-time
-- [ ] Enforcement credite pe fiecare acțiune AI (server-side)
-- [ ] Rebalansare prețuri/planuri
+### ✅ Faza 3 — Monetizare (credite + Revolut) (gata)
+- [x] Enforcement credite server-side (`consume_credits()` în proxy, 402 la sold 0)
+- [x] Credite actualizate instant în UI după fiecare apel AI (fără round-trip DB)
+- [x] Schema DB plăți: `plans`, `subscriptions`, `transactions`, `complete_payment()`
+- [x] Revolut Merchant API: `api/revolut/checkout.js` + `api/revolut/webhook.js`
+- [x] `PlansModule.tsx`: UI top-up credite + abonamente Starter/Pro
+- [x] Header Dashboard: badge credite clickabil → Planuri; alertă + buton Top-up la < 5 credite
+- [ ] Configurare Revolut (necesită cont Merchant activ): `REVOLUT_API_KEY`, `REVOLUT_WEBHOOK_SECRET`
 
 ### 📄 Faza 4 — Documente & export
 - [ ] Export **Word (.docx)** și **PDF** profesional

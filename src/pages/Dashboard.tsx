@@ -6,13 +6,14 @@ import ContractModule from "../modules/ContractModule";
 import EmailModule from "../modules/EmailModule";
 import AnalysisModule from "../modules/AnalysisModule";
 import HistoryModule from "../modules/HistoryModule";
+import PlansModule from "../modules/PlansModule";
 import type { ShowToast, ToastState } from "../types";
 
 interface DashboardProps {
   onBack: () => void;
 }
 
-type Tab = "contracte" | "emailuri" | "analiza" | "istoric";
+type Tab = "contracte" | "emailuri" | "analiza" | "istoric" | "planuri";
 
 export default function Dashboard({ onBack }: DashboardProps) {
   const [tab, setTab] = useState<Tab>("contracte");
@@ -25,6 +26,7 @@ export default function Dashboard({ onBack }: DashboardProps) {
     { id: "emailuri", icon: "📧", label: "Email-uri" },
     { id: "analiza", icon: "🔍", label: "Analiză" },
     ...(user ? [{ id: "istoric" as Tab, icon: "🗂️", label: "Istoric" }] : []),
+    { id: "planuri" as Tab, icon: "💳", label: "Planuri" },
   ];
   return (
     <div style={{ display:"flex",flexDirection:"column",height:"100vh",overflow:"hidden",background:"#070d1a",fontFamily:"'DM Sans',sans-serif",color:"#e2e8f0" }}>
@@ -43,7 +45,10 @@ export default function Dashboard({ onBack }: DashboardProps) {
         <div style={{ marginLeft:"auto",display:"flex",alignItems:"center",gap:8,flexShrink:0 }}>
           {user && profile ? (
             <>
-              <span title="Credite disponibile" style={{ display:"flex",alignItems:"center",gap:5,background:"#1e293b",borderRadius:100,padding:"5px 12px",fontFamily:"'Syne',sans-serif",fontWeight:700,fontSize:12,color:"#6ee7b7",whiteSpace:"nowrap" }}>⚡ {profile.credits}{!isMobile&&" credite"}</span>
+              <span title="Credite disponibile" onClick={()=>setTab("planuri")} style={{ display:"flex",alignItems:"center",gap:5,background:"#1e293b",borderRadius:100,padding:"5px 12px",fontFamily:"'Syne',sans-serif",fontWeight:700,fontSize:12,color:profile.credits<5?"#f87171":"#6ee7b7",whiteSpace:"nowrap",cursor:"pointer" }}>⚡ {profile.credits}{!isMobile&&" credite"}</span>
+              {profile.credits < 5 && !isMobile && (
+                <button onClick={()=>setTab("planuri")} style={{ background:"linear-gradient(135deg,#818cf8,#6ee7b7)",border:"none",borderRadius:8,padding:"5px 12px",color:"#070d1a",cursor:"pointer",fontSize:11,fontFamily:"'Syne',sans-serif",fontWeight:700,whiteSpace:"nowrap",animation:"pulse 2s infinite" }}>+ Top-up</button>
+              )}
               <button onClick={()=>signOut()} title="Deconectare" style={{ background:"#1e293b",border:"1px solid #334155",borderRadius:8,padding:"5px 10px",color:"#94a3b8",cursor:"pointer",fontSize:12,fontFamily:"'DM Sans',sans-serif",whiteSpace:"nowrap" }}>{isMobile?"⎋":"Ieși"}</button>
             </>
           ) : (
@@ -59,6 +64,7 @@ export default function Dashboard({ onBack }: DashboardProps) {
         {tab==="emailuri"&&<EmailModule showToast={showToast} />}
         {tab==="analiza"&&<AnalysisModule showToast={showToast} />}
         {tab==="istoric"&&<HistoryModule showToast={showToast} />}
+        {tab==="planuri"&&<PlansModule showToast={showToast} />}
       </div>
       {isMobile && (
         <div style={{ display:"flex",borderTop:"1px solid #1e293b",background:"#0a1220",flexShrink:0,zIndex:10 }}>

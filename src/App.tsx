@@ -27,6 +27,15 @@ export default function App() {
     }
   }, [user, authOpen]);
 
+  // Redirect după plată Revolut (?payment=success) — intrăm direct în dashboard.
+  useEffect(() => {
+    const params = new URLSearchParams(window.location.search);
+    if (params.get("payment") === "success") {
+      window.history.replaceState({}, "", window.location.pathname);
+      setPage("dashboard");
+    }
+  }, []);
+
   return (
     <>
       <GlobalStyles />
