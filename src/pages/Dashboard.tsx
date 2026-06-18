@@ -7,13 +7,14 @@ import EmailModule from "../modules/EmailModule";
 import AnalysisModule from "../modules/AnalysisModule";
 import HistoryModule from "../modules/HistoryModule";
 import PlansModule from "../modules/PlansModule";
+import NoticeModule from "../modules/NoticeModule";
 import type { ShowToast, ToastState } from "../types";
 
 interface DashboardProps {
   onBack: () => void;
 }
 
-type Tab = "contracte" | "emailuri" | "analiza" | "istoric" | "planuri";
+type Tab = "contracte" | "emailuri" | "analiza" | "documente" | "istoric" | "planuri";
 
 export default function Dashboard({ onBack }: DashboardProps) {
   const [tab, setTab] = useState<Tab>("contracte");
@@ -25,6 +26,7 @@ export default function Dashboard({ onBack }: DashboardProps) {
     { id: "contracte", icon: "📜", label: "Contracte" },
     { id: "emailuri", icon: "📧", label: "Email-uri" },
     { id: "analiza", icon: "🔍", label: "Analiză" },
+    { id: "documente", icon: "📨", label: "Documente" },
     ...(user ? [{ id: "istoric" as Tab, icon: "🗂️", label: "Istoric" }] : []),
     { id: "planuri" as Tab, icon: "💳", label: "Planuri" },
   ];
@@ -64,6 +66,7 @@ export default function Dashboard({ onBack }: DashboardProps) {
         {tab==="emailuri"&&<EmailModule showToast={showToast} />}
         {tab==="analiza"&&<AnalysisModule showToast={showToast} />}
         {tab==="istoric"&&<HistoryModule showToast={showToast} />}
+        {tab==="documente"&&<NoticeModule showToast={showToast} />}
         {tab==="planuri"&&<PlansModule showToast={showToast} />}
       </div>
       {isMobile && (

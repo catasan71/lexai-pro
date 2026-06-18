@@ -4,6 +4,7 @@ import { useIsMobile } from "../hooks/useIsMobile";
 import { Spinner } from "../components/Spinner";
 import { callClaude, extractJSON } from "../lib/claude";
 import { saveDocument } from "../lib/documents";
+import { exportDocx, exportPdf } from "../lib/export";
 import { CONTRACT_TYPES } from "../data/contractTypes";
 
 export default function ContractModule({ showToast }) {
@@ -15,6 +16,18 @@ export default function ContractModule({ showToast }) {
   const [contract, setContract] = useState("");
   const [loadC, setLoadC] = useState(false);
   const [loadG, setLoadG] = useState(false);
+  const [loadExp, setLoadExp] = useState(null); // "docx" | "pdf" | null
+
+  var doExport = async function(type) {
+    if (!contract) return;
+    setLoadExp(type);
+    try {
+      var title = form.contractType + " " + form.contractNo;
+      if (type === "docx") await exportDocx(title, contract);
+      else await exportPdf(title, contract);
+    } catch(e) { showToast("Eroare export: " + e.message, "error"); }
+    setLoadExp(null);
+  };
   const upd = (k,v) => setForm(function(f){ var n={};Object.assign(n,f);n[k]=v;return n; });
   const toggleSel = i => setSel(function(s){ return s.indexOf(i)>=0 ? s.filter(function(x){return x!==i;}) : s.concat([i]); });
   const INP = { background:"#0f172a",border:"1px solid #1e293b",borderRadius:10,padding:"10px 14px",color:"#e2e8f0",fontSize:13,fontFamily:"'DM Sans',sans-serif",width:"100%",boxSizing:"border-box",outline:"none" };
@@ -122,9 +135,14 @@ export default function ContractModule({ showToast }) {
         <div>
           <div style={{ display:"flex",justifyContent:"space-between",alignItems:"center",marginBottom:10,flexWrap:"wrap",gap:8 }}>
             <div style={{ color:"#10b981",fontSize:11,fontWeight:700,textTransform:"uppercase",letterSpacing:.5 }}>📄 Contract Generat</div>
-            <div style={{ display:"flex",gap:8 }}>
+            <div style={{ display:"flex",gap:8,flexWrap:"wrap" }}>
               <button onClick={()=>{navigator.clipboard.writeText(contract);showToast("Contract copiat!","success");}} style={{ background:"#1e293b",border:"1px solid #334155",borderRadius:8,padding:"6px 12px",color:"#e2e8f0",fontFamily:"'Syne',sans-serif",fontWeight:600,fontSize:12,cursor:"pointer" }}>📋 Copiază</button>
-              <button onClick={()=>window.print()} style={{ background:"#1e293b",border:"1px solid #334155",borderRadius:8,padding:"6px 12px",color:"#e2e8f0",fontFamily:"'Syne',sans-serif",fontWeight:600,fontSize:12,cursor:"pointer" }}>🖨️ Print</button>
+              <button onClick={()=>doExport("docx")} disabled={!!loadExp} style={{ background:"#1e293b",border:"1px solid #334155",borderRadius:8,padding:"6px 12px",color:"#818cf8",fontFamily:"'Syne',sans-serif",fontWeight:600,fontSize:12,cursor:loadExp?"not-allowed":"pointer",display:"flex",alignItems:"center",gap:5,opacity:loadExp?.7:1 }}>
+                {loadExp==="docx"?<><Spinner/>...</>:"📝 Word"}
+              </button>
+              <button onClick={()=>doExport("pdf")} disabled={!!loadExp} style={{ background:"#1e293b",border:"1px solid #334155",borderRadius:8,padding:"6px 12px",color:"#f472b6",fontFamily:"'Syne',sans-serif",fontWeight:600,fontSize:12,cursor:loadExp?"not-allowed":"pointer",display:"flex",alignItems:"center",gap:5,opacity:loadExp?.7:1 }}>
+                {loadExp==="pdf"?<><Spinner/>...</>:"📕 PDF"}
+              </button>
             </div>
           </div>
           <div style={{ background:"#0a1628",border:"1px solid #1e293b",borderRadius:12,padding:18,whiteSpace:"pre-wrap",fontSize:12,color:"#94a3b8",lineHeight:1.8,maxHeight:400,overflowY:"auto",fontFamily:"'DM Sans',sans-serif" }}>{contract}</div>

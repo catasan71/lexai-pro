@@ -46,10 +46,14 @@ Plan de transformare din prototip single-file într-un SaaS complet, pregătit p
 - [x] Header Dashboard: badge credite clickabil → Planuri; alertă + buton Top-up la < 5 credite
 - [ ] Configurare Revolut (necesită cont Merchant activ): `REVOLUT_API_KEY`, `REVOLUT_WEBHOOK_SECRET`
 
-### 📄 Faza 4 — Documente & export
-- [ ] Export **Word (.docx)** și **PDF** profesional
-- [ ] Tipuri noi de documente (notificări, somații, decizii, procuri etc.)
-- [ ] Template-uri salvabile / reutilizabile
+### ✅ Faza 4 — Documente & export (gata)
+- [x] Export **Word (.docx)** — librăria `docx`, lazy-loaded, heading detection, branding LexAI Pro
+- [x] Export **PDF profesional** — `jsPDF`, lazy-loaded, header branded, footer cu număr pagină
+- [x] Export raport analiză PDF — structurat pe secțiuni (riscuri, clauze lipsă, recomandări, scor)
+- [x] Butoane Word + PDF în ContractModule; buton PDF în AnalysisModule
+- [x] **6 tipuri noi de documente** (`NoticeModule`): Notificare, Somație Plată, Decizie Concediere, Decizie Disciplinară, Procură, Plângere/Contestație
+- [x] Export Word + PDF disponibil și în NoticeModule
+- [ ] Template-uri salvabile / reutilizabile — opțional, ulterior
 
 ### 🎨 Faza 5 — Landing premium
 - [ ] Redesign landing

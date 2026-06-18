@@ -5,6 +5,7 @@ import { Spinner } from "../components/Spinner";
 import { callClaude, extractJSON } from "../lib/claude";
 import { saveDocument } from "../lib/documents";
 import { extractPdfText } from "../lib/pdf";
+import { exportAnalysisPdf } from "../lib/export";
 
 export default function AnalysisModule({ showToast }) {
   const isMobile = useIsMobile();
@@ -60,6 +61,16 @@ export default function AnalysisModule({ showToast }) {
     setLoading(false);
   };
 
+  var [loadExp, setLoadExp] = useState(false);
+  var doExportPdf = async function() {
+    if (!result) return;
+    setLoadExp(true);
+    try {
+      var title = (result.rezumat && result.rezumat.tip) || (file && file.name) || "Analiză contract";
+      await exportAnalysisPdf(title, result);
+    } catch(e) { showToast("Eroare export: " + e.message, "error"); }
+    setLoadExp(false);
+  };
   var SC = { "Scazut":"#10b981","Scăzut":"#10b981","Mediu":"#fbbf24","Ridicat":"#f97316","Critic":"#ef4444" };
 
   var uploadContent = (
@@ -96,6 +107,11 @@ export default function AnalysisModule({ showToast }) {
       {isMobile && <button onClick={()=>setPanel("upload")} style={{ background:"#1e293b",border:"none",borderRadius:8,padding:"8px 14px",color:"#94a3b8",cursor:"pointer",fontSize:13,fontFamily:"'DM Sans',sans-serif",marginBottom:16,display:"flex",alignItems:"center",gap:6 }}>← Upload</button>}
       {result ? (
         <div>
+          <div style={{ display:"flex",justifyContent:"flex-end",marginBottom:12 }}>
+            <button onClick={doExportPdf} disabled={loadExp} style={{ background:"#1e293b",border:"1px solid #334155",borderRadius:8,padding:"6px 14px",color:"#f472b6",fontFamily:"'Syne',sans-serif",fontWeight:600,fontSize:12,cursor:loadExp?"not-allowed":"pointer",display:"flex",alignItems:"center",gap:6,opacity:loadExp?.7:1 }}>
+              {loadExp?<><Spinner/>Se exportă...</>:"📕 Export PDF Raport"}
+            </button>
+          </div>
           <div style={{ display:"grid",gridTemplateColumns:"1fr 1fr 1fr",gap:10,marginBottom:20 }}>
             <div style={{ background:"#0f172a",border:"1px solid "+(SC[result.rezumat&&result.rezumat.scor]||"#818cf8")+"30",borderRadius:12,padding:14,textAlign:"center" }}>
               <div style={{ color:"#64748b",fontSize:10,marginBottom:6 }}>SCOR RISC</div>
