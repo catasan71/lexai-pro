@@ -1,5 +1,16 @@
 /** Tipuri partajate în toată aplicația. */
 
+/** Profilul utilizatorului (tabela public.profiles). */
+export interface Profile {
+  id: string;
+  email: string | null;
+  full_name: string | null;
+  company_name: string | null;
+  company_cui: string | null;
+  plan: "trial" | "starter" | "pro";
+  credits: number;
+}
+
 export type ToastType = "success" | "error" | "info";
 
 export interface ToastState {

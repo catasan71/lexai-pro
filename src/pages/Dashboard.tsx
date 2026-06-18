@@ -1,5 +1,6 @@
 import { useState } from "react";
 import { useIsMobile } from "../hooks/useIsMobile";
+import { useAuth } from "../auth/AuthProvider";
 import { Toast } from "../components/Toast";
 import ContractModule from "../modules/ContractModule";
 import EmailModule from "../modules/EmailModule";
@@ -16,6 +17,7 @@ export default function Dashboard({ onBack }: DashboardProps) {
   const [tab, setTab] = useState<Tab>("contracte");
   const [toast, setToast] = useState<ToastState | null>(null);
   const isMobile = useIsMobile();
+  const { user, profile, signOut } = useAuth();
   const showToast: ShowToast = (msg, type) => setToast({ msg, type: type || "info" });
   const tabs: { id: Tab; icon: string; label: string }[] = [
     { id: "contracte", icon: "📜", label: "Contracte" },
@@ -36,9 +38,18 @@ export default function Dashboard({ onBack }: DashboardProps) {
             {tabs.map(function(t){ return <button key={t.id} onClick={()=>setTab(t.id)} style={{ background:tab===t.id?"#1e293b":"none",border:"1px solid "+(tab===t.id?"#334155":"transparent"),borderRadius:8,padding:"6px 16px",color:tab===t.id?"#e2e8f0":"#64748b",fontFamily:"'Syne',sans-serif",fontWeight:700,fontSize:13,cursor:"pointer",whiteSpace:"nowrap" }}>{t.icon} {t.label}</button>; })}
           </div>
         )}
-        <div style={{ marginLeft:"auto",display:"flex",alignItems:"center",gap:6,flexShrink:0 }}>
-          <span style={{ width:7,height:7,background:"#10b981",borderRadius:"50%",animation:"pulse 2s infinite",display:"inline-block",flexShrink:0 }} />
-          {!isMobile&&<span style={{ color:"#10b981",fontSize:12,fontFamily:"'Syne',sans-serif",fontWeight:700,whiteSpace:"nowrap" }}>Pro Business</span>}
+        <div style={{ marginLeft:"auto",display:"flex",alignItems:"center",gap:8,flexShrink:0 }}>
+          {user && profile ? (
+            <>
+              <span title="Credite disponibile" style={{ display:"flex",alignItems:"center",gap:5,background:"#1e293b",borderRadius:100,padding:"5px 12px",fontFamily:"'Syne',sans-serif",fontWeight:700,fontSize:12,color:"#6ee7b7",whiteSpace:"nowrap" }}>⚡ {profile.credits}{!isMobile&&" credite"}</span>
+              <button onClick={()=>signOut()} title="Deconectare" style={{ background:"#1e293b",border:"1px solid #334155",borderRadius:8,padding:"5px 10px",color:"#94a3b8",cursor:"pointer",fontSize:12,fontFamily:"'DM Sans',sans-serif",whiteSpace:"nowrap" }}>{isMobile?"⎋":"Ieși"}</button>
+            </>
+          ) : (
+            <>
+              <span style={{ width:7,height:7,background:"#10b981",borderRadius:"50%",animation:"pulse 2s infinite",display:"inline-block",flexShrink:0 }} />
+              {!isMobile&&<span style={{ color:"#10b981",fontSize:12,fontFamily:"'Syne',sans-serif",fontWeight:700,whiteSpace:"nowrap" }}>Pro Business</span>}
+            </>
+          )}
         </div>
       </div>
       <div style={{ flex:1,overflow:"hidden",minHeight:0 }}>
