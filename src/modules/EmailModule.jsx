@@ -3,6 +3,7 @@ import { useState } from "react";
 import { useIsMobile } from "../hooks/useIsMobile";
 import { Spinner } from "../components/Spinner";
 import { callClaude, extractJSON } from "../lib/claude";
+import { saveDocument } from "../lib/documents";
 import { EMAIL_TYPES, EMAIL_TONES } from "../data/emailTypes";
 
 export default function EmailModule({ showToast }) {
@@ -25,6 +26,7 @@ export default function EmailModule({ showToast }) {
       var parsed = extractJSON(txt);
       if (!parsed.subiect || !parsed.corp) throw new Error("Raspuns incomplet — lipsesc campuri");
       setResult(parsed);
+      saveDocument("email", form.emailType + (form.toName ? " — " + form.toName : ""), parsed);
       showToast("Email generat!", "success");
       if (isMobile) setPanel("result");
     } catch(e) {

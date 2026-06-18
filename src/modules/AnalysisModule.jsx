@@ -3,6 +3,7 @@ import { useState, useRef } from "react";
 import { useIsMobile } from "../hooks/useIsMobile";
 import { Spinner } from "../components/Spinner";
 import { callClaude, extractJSON } from "../lib/claude";
+import { saveDocument } from "../lib/documents";
 import { extractPdfText } from "../lib/pdf";
 
 export default function AnalysisModule({ showToast }) {
@@ -49,6 +50,7 @@ export default function AnalysisModule({ showToast }) {
       var txt = await callClaude("analysis", prompt);
       var parsed = extractJSON(txt);
       setResult(parsed);
+      saveDocument("analysis", (parsed.rezumat && parsed.rezumat.tip) || (file && file.name) || "Analiză contract", parsed);
       showToast("Analiză completă!", "success");
       if (isMobile) setPanel("result");
     } catch(e) {

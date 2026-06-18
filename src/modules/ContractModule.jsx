@@ -3,6 +3,7 @@ import { useState } from "react";
 import { useIsMobile } from "../hooks/useIsMobile";
 import { Spinner } from "../components/Spinner";
 import { callClaude, extractJSON } from "../lib/claude";
+import { saveDocument } from "../lib/documents";
 import { CONTRACT_TYPES } from "../data/contractTypes";
 
 export default function ContractModule({ showToast }) {
@@ -46,6 +47,7 @@ export default function ContractModule({ showToast }) {
       var txt = await callClaude("contract", prompt);
       if (!txt) throw new Error("Raspuns gol");
       setContract(txt);
+      saveDocument("contract", form.contractType + " " + form.contractNo, { text: txt, form });
       showToast("Contract generat cu succes!", "success");
       if (isMobile) setPanel("result");
     } catch(e) {
