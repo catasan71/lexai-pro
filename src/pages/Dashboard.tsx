@@ -8,13 +8,14 @@ import AnalysisModule from "../modules/AnalysisModule";
 import HistoryModule from "../modules/HistoryModule";
 import PlansModule from "../modules/PlansModule";
 import NoticeModule from "../modules/NoticeModule";
+import ContModule from "../modules/ContModule";
 import type { ShowToast, ToastState } from "../types";
 
 interface DashboardProps {
   onBack: () => void;
 }
 
-type Tab = "contracte" | "emailuri" | "analiza" | "documente" | "istoric" | "planuri";
+type Tab = "contracte" | "emailuri" | "analiza" | "documente" | "istoric" | "planuri" | "cont";
 
 export default function Dashboard({ onBack }: DashboardProps) {
   const [tab, setTab] = useState<Tab>("contracte");
@@ -29,6 +30,7 @@ export default function Dashboard({ onBack }: DashboardProps) {
     { id: "documente", icon: "📨", label: "Documente" },
     ...(user ? [{ id: "istoric" as Tab, icon: "🗂️", label: "Istoric" }] : []),
     { id: "planuri" as Tab, icon: "💳", label: "Planuri" },
+    ...(user ? [{ id: "cont" as Tab, icon: "👤", label: "Cont" }] : []),
   ];
   return (
     <div style={{ display:"flex",flexDirection:"column",height:"100vh",overflow:"hidden",background:"#070d1a",fontFamily:"'DM Sans',sans-serif",color:"#e2e8f0" }}>
@@ -68,6 +70,7 @@ export default function Dashboard({ onBack }: DashboardProps) {
         {tab==="istoric"&&<HistoryModule showToast={showToast} />}
         {tab==="documente"&&<NoticeModule showToast={showToast} />}
         {tab==="planuri"&&<PlansModule showToast={showToast} />}
+        {tab==="cont"&&<ContModule showToast={showToast} />}
       </div>
       {isMobile && (
         <div style={{ display:"flex",borderTop:"1px solid #1e293b",background:"#0a1220",flexShrink:0,zIndex:10 }}>

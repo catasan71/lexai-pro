@@ -1,6 +1,8 @@
 import { useState, useEffect } from "react";
 import { GlobalStyles } from "./styles/GlobalStyles";
 import { AuthModal } from "./components/AuthModal";
+import { Modal } from "./components/Modal";
+import { CookieConsent } from "./components/CookieConsent";
 import { useAuth } from "./auth/AuthProvider";
 import LandingPage from "./pages/LandingPage";
 import Dashboard from "./pages/Dashboard";
@@ -11,6 +13,7 @@ export default function App() {
   const { user, configured } = useAuth();
   const [page, setPage] = useState<Page>("landing");
   const [authOpen, setAuthOpen] = useState(false);
+  const [cookiePolicyOpen, setCookiePolicyOpen] = useState(false);
 
   // Intrarea în app: dacă avem auth activ și userul nu e logat → cerem login.
   // Altfel (logat, sau Supabase neconfigurat) → mergem direct în dashboard.
@@ -40,6 +43,8 @@ export default function App() {
     <>
       <GlobalStyles />
       <AuthModal open={authOpen} onClose={() => setAuthOpen(false)} />
+      {cookiePolicyOpen && <Modal type="cookies" onClose={() => setCookiePolicyOpen(false)} />}
+      <CookieConsent onOpenPolicy={() => setCookiePolicyOpen(true)} />
       {page === "landing" ? (
         <LandingPage onEnterApp={enterApp} />
       ) : (

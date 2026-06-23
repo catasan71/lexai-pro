@@ -14,6 +14,8 @@
  *   APP_URL                   — URL-ul aplicației (ex: https://lexai.pro)
  */
 
+import { checkRateLimit } from "../_lib/rateLimit.js";
+
 const PACKS = {
   topup_10:  { credits: 10,  amount: 9,   type: "topup",        desc: "LexAI Pro — 10 credite" },
   topup_30:  { credits: 30,  amount: 24,  type: "topup",        desc: "LexAI Pro — 30 credite" },
@@ -44,6 +46,11 @@ export default async function handler(req, res) {
   if (!userRes?.ok) return res.status(401).json({ error: { message: "Sesiune invalidă." } });
 
   const { id: userId, email } = await userRes.json();
+
+  const allowed = await checkRateLimit(supabaseUrl, serviceKey, `checkout:${userId}`, 10, 60);
+  if (!allowed) {
+    return res.status(429).json({ error: { message: "Prea multe cereri de plată. Așteaptă puțin." } });
+  }
 
   const { packId } = req.body ?? {};
   const pack = PACKS[packId];

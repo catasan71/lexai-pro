@@ -97,6 +97,11 @@ export async function callClaude(task: AiTask, content: string | ContentBlock[])
     const body = await r.json().catch(() => ({})) as { error?: { message?: string } };
     throw new Error(body.error?.message ?? "Credite insuficiente.");
   }
+  // 429 = rate limit atins
+  if (r.status === 429) {
+    const body = await r.json().catch(() => ({})) as { error?: { message?: string } };
+    throw new Error(body.error?.message ?? "Prea multe cereri. Așteaptă puțin.");
+  }
 
   const data: AnthropicResponse = await r.json();
   if (data.error) throw new Error("API: " + (data.error.message ?? JSON.stringify(data.error)));

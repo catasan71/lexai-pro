@@ -14,12 +14,17 @@
  *   4. Dacă OK → apel Anthropic → răspuns cu header x-credits-remaining
  */
 
+import { checkRateLimit } from "./_lib/rateLimit.js";
+import { reportError } from "./_lib/sentry.js";
+
 const TASK_CREDITS = {
   email:    1,
   clauses:  2,
   contract: 3,
   analysis: 6,
 };
+
+const RATE_LIMIT_MAX_PER_MINUTE = 20;
 
 export default async function handler(req, res) {
   if (req.method !== "POST") {
@@ -62,6 +67,11 @@ export default async function handler(req, res) {
     const { id: userId } = await userRes.json();
     if (!userId) {
       return res.status(401).json({ error: { message: "Token invalid." } });
+    }
+
+    const allowed = await checkRateLimit(supabaseUrl, serviceKey, `claude:${userId}`, RATE_LIMIT_MAX_PER_MINUTE, 60);
+    if (!allowed) {
+      return res.status(429).json({ error: { message: "Prea multe cereri. Așteaptă puțin și încearcă din nou." } });
     }
 
     const cost  = TASK_CREDITS[task] ?? 1;
@@ -112,7 +122,7 @@ export default async function handler(req, res) {
     const data = await response.json();
     return res.status(response.status).json(data);
   } catch (error) {
-    console.error("Proxy error:", error);
+    await reportError(error, { tag: "claude-proxy", task });
     return res.status(500).json({
       error: { message: "Proxy error: " + (error.message ?? "Unknown error") },
     });

@@ -13,6 +13,7 @@
  */
 
 import crypto from "crypto";
+import { reportError } from "../_lib/sentry.js";
 
 export default async function handler(req, res) {
   if (req.method !== "POST") return res.status(405).json({ error: "Method not allowed" });
@@ -34,7 +35,10 @@ export default async function handler(req, res) {
       .update(rawBody)
       .digest("hex");
 
-    if (!crypto.timingSafeEqual(Buffer.from(signature), Buffer.from(expected))) {
+    const sigBuf = Buffer.from(signature);
+    const expBuf = Buffer.from(expected);
+    const valid = sigBuf.length === expBuf.length && crypto.timingSafeEqual(sigBuf, expBuf);
+    if (!valid) {
       console.warn("Webhook: semnătură invalidă");
       return res.status(401).json({ error: "Invalid signature." });
     }
@@ -66,7 +70,7 @@ export default async function handler(req, res) {
       if (msg.includes("TRANSACTION_NOT_FOUND")) {
         return res.status(200).json({ ok: true, note: "already processed" });
       }
-      console.error("complete_payment error:", body);
+      await reportError(new Error("complete_payment failed"), { tag: "revolut-webhook", orderId: order.id, body });
       return res.status(500).json({ error: "Eroare la procesarea plății." });
     }
 

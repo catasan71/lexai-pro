@@ -64,12 +64,15 @@ Plan de transformare din prototip single-file într-un SaaS complet, pregătit p
 - [x] **SEO complet**: meta description, OG, Twitter Card, JSON-LD structured data, canonical
 - [x] Footer extins: badges GDPR/Made in RO/AI-Powered, hover pe linkuri
 
-### 🚀 Faza 6 — Pregătire producție
-- [ ] Rate limiting + abuse protection
-- [ ] Monitorizare erori (Sentry) + analytics
-- [ ] GDPR real, ToS, facturare
-- [ ] Teste E2E pe fluxurile critice
+### ✅ Faza 6 — Pregătire producție (gata)
+- [x] **Rate limiting**: `check_rate_limit()` Postgres (fereastră fixă, atomic) — `api/claude.js` (20/min/user), `api/revolut/checkout.js` (10/min/user), `api/account/export.js` (5/min/user); fail-open la erori de infra
+- [x] **Hardening webhook Revolut**: fix `crypto.timingSafeEqual` (lungimi diferite → crash) înainte de verificarea semnăturii
+- [x] **Monitorizare erori (Sentry)**: opt-in via `VITE_SENTRY_DSN` (frontend, `@sentry/react`) și `SENTRY_DSN` (serverless, raportare directă prin Envelope API, fără SDK greu)
+- [x] **Analytics**: `@vercel/analytics` (zero-config pe Vercel)
+- [x] **GDPR real**: endpoint export date (`api/account/export.js`, JSON descărcabil) + ștergere cont ireversibilă (`api/account/delete.js`, cascadă pe toate tabelele) + UI `ContModule.tsx` (tab „Cont" în Dashboard)
+- [x] **Cookie consent banner**: `CookieConsent.tsx`, alegere persistată local, link spre politica de cookies
+- [x] **Teste E2E** (Playwright): landing (hero, CTA), cookie consent, modal GDPR, secțiune pricing, flux intrare în app → modal autentificare
 
 ---
 
-*Actualizat: 2026-06-18*
+*Actualizat: 2026-06-23*
