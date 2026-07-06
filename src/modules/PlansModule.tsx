@@ -78,12 +78,12 @@ export default function PlansModule({ showToast }: { showToast: ShowToast }) {
           <div style={{ flex: 1, minWidth: 160 }}>
             <div style={{ color: "#64748b", fontSize: 11, fontWeight: 700, textTransform: "uppercase", letterSpacing: 0.5, marginBottom: 6 }}>Plan curent</div>
             <div style={{ display: "flex", alignItems: "center", gap: 8 }}>
-              <span style={{ fontFamily: "'Syne',sans-serif", fontWeight: 800, fontSize: 18, color: planColor }}>{planLabel}</span>
+              <span style={{ fontFamily: "'Space Grotesk',sans-serif", fontWeight: 800, fontSize: 18, color: planColor }}>{planLabel}</span>
             </div>
           </div>
           <div style={{ textAlign: "center" }}>
             <div style={{ color: "#64748b", fontSize: 11, fontWeight: 700, textTransform: "uppercase", letterSpacing: 0.5, marginBottom: 6 }}>Credite disponibile</div>
-            <div style={{ fontFamily: "'Syne',sans-serif", fontWeight: 800, fontSize: 28, color: "#6ee7b7" }}>⚡ {profile?.credits ?? 0}</div>
+            <div style={{ fontFamily: "'Space Grotesk',sans-serif", fontWeight: 800, fontSize: 28, color: "#6ee7b7" }}>⚡ {profile?.credits ?? 0}</div>
           </div>
           <div style={{ flex: 1, minWidth: 160, textAlign: isMobile ? "left" : "right" }}>
             <div style={{ color: "#64748b", fontSize: 11, fontWeight: 700, textTransform: "uppercase", letterSpacing: 0.5, marginBottom: 6 }}>Cost acțiuni</div>
@@ -98,7 +98,7 @@ export default function PlansModule({ showToast }: { showToast: ShowToast }) {
         {/* Tab selector */}
         <div style={{ display: "flex", gap: 0, background: "#0f172a", border: "1px solid #1e293b", borderRadius: 10, padding: 4, marginBottom: 20, width: "fit-content" }}>
           {(["topup", "subscription"] as const).map((t) => (
-            <button key={t} onClick={() => setTab(t)} style={{ background: tab === t ? "#1e293b" : "none", border: "none", borderRadius: 7, padding: "8px 18px", color: tab === t ? "#e2e8f0" : "#64748b", fontFamily: "'Syne',sans-serif", fontWeight: 700, fontSize: 13, cursor: "pointer", transition: "all .15s" }}>
+            <button key={t} onClick={() => setTab(t)} style={{ background: tab === t ? "#1e293b" : "none", border: "none", borderRadius: 7, padding: "8px 18px", color: tab === t ? "#e2e8f0" : "#64748b", fontFamily: "'Space Grotesk',sans-serif", fontWeight: 700, fontSize: 13, cursor: "pointer", transition: "all .15s" }}>
               {t === "topup" ? "⚡ Top-up credite" : "📋 Abonamente"}
             </button>
           ))}
@@ -114,16 +114,16 @@ export default function PlansModule({ showToast }: { showToast: ShowToast }) {
                   {pack.badge && (
                     <div style={{ position: "absolute", top: 12, right: 12, background: pack.color + "20", color: pack.color, fontSize: 10, fontWeight: 700, padding: "3px 8px", borderRadius: 100, border: `1px solid ${pack.color}40` }}>{pack.badge}</div>
                   )}
-                  <div style={{ fontFamily: "'Syne',sans-serif", fontWeight: 800, fontSize: 22, color: pack.color }}>⚡ {pack.credits}</div>
+                  <div style={{ fontFamily: "'Space Grotesk',sans-serif", fontWeight: 800, fontSize: 22, color: pack.color }}>⚡ {pack.credits}</div>
                   <div style={{ color: "#64748b", fontSize: 12 }}>credite</div>
-                  <div style={{ fontFamily: "'Syne',sans-serif", fontWeight: 800, fontSize: 26, color: "#e2e8f0", marginTop: 4 }}>
+                  <div style={{ fontFamily: "'Space Grotesk',sans-serif", fontWeight: 800, fontSize: 26, color: "#e2e8f0", marginTop: 4 }}>
                     {pack.price} <span style={{ fontSize: 14, color: "#64748b", fontWeight: 400 }}>RON</span>
                   </div>
                   <div style={{ color: "#475569", fontSize: 11 }}>{(pack.price / pack.credits).toFixed(2)} RON / credit</div>
                   <button
                     onClick={() => initCheckout(pack)}
                     disabled={loading !== null}
-                    style={{ background: `linear-gradient(135deg,${pack.color}cc,${pack.color})`, border: "none", borderRadius: 9, padding: "11px 0", color: "#070d1a", fontFamily: "'Syne',sans-serif", fontWeight: 700, fontSize: 13, cursor: loading ? "not-allowed" : "pointer", display: "flex", alignItems: "center", justifyContent: "center", gap: 6, opacity: loading ? 0.7 : 1, marginTop: "auto" }}
+                    style={{ background: `linear-gradient(135deg,${pack.color}cc,${pack.color})`, border: "none", borderRadius: 9, padding: "11px 0", color: "#070d1a", fontFamily: "'Space Grotesk',sans-serif", fontWeight: 700, fontSize: 13, cursor: loading ? "not-allowed" : "pointer", display: "flex", alignItems: "center", justifyContent: "center", gap: 6, opacity: loading ? 0.7 : 1, marginTop: "auto" }}
                   >
                     {loading === pack.id ? <><Spinner /> Se procesează...</> : "Cumpără acum"}
                   </button>
@@ -144,8 +144,8 @@ export default function PlansModule({ showToast }: { showToast: ShowToast }) {
                     <div style={{ position: "absolute", top: 14, right: 14, background: pack.color + "20", color: pack.color, fontSize: 10, fontWeight: 700, padding: "3px 10px", borderRadius: 100, border: `1px solid ${pack.color}40` }}>{pack.badge}</div>
                   )}
                   <div>
-                    <div style={{ fontFamily: "'Syne',sans-serif", fontWeight: 800, fontSize: 18, color: pack.color, marginBottom: 4 }}>{pack.label}</div>
-                    <div style={{ fontFamily: "'Syne',sans-serif", fontWeight: 800, fontSize: 30, color: "#e2e8f0" }}>
+                    <div style={{ fontFamily: "'Space Grotesk',sans-serif", fontWeight: 800, fontSize: 18, color: pack.color, marginBottom: 4 }}>{pack.label}</div>
+                    <div style={{ fontFamily: "'Space Grotesk',sans-serif", fontWeight: 800, fontSize: 30, color: "#e2e8f0" }}>
                       {pack.price} <span style={{ fontSize: 14, color: "#64748b", fontWeight: 400 }}>RON/lună</span>
                     </div>
                   </div>
@@ -159,7 +159,7 @@ export default function PlansModule({ showToast }: { showToast: ShowToast }) {
                   <button
                     onClick={() => initCheckout(pack)}
                     disabled={loading !== null || profile?.plan === pack.id}
-                    style={{ background: profile?.plan === pack.id ? "#1e293b" : `linear-gradient(135deg,${pack.color}cc,${pack.color})`, border: profile?.plan === pack.id ? "1px solid #334155" : "none", borderRadius: 10, padding: "12px 0", color: profile?.plan === pack.id ? "#64748b" : "#070d1a", fontFamily: "'Syne',sans-serif", fontWeight: 700, fontSize: 13, cursor: (loading || profile?.plan === pack.id) ? "not-allowed" : "pointer", display: "flex", alignItems: "center", justifyContent: "center", gap: 6, opacity: loading ? 0.7 : 1, marginTop: "auto" }}
+                    style={{ background: profile?.plan === pack.id ? "#1e293b" : `linear-gradient(135deg,${pack.color}cc,${pack.color})`, border: profile?.plan === pack.id ? "1px solid #334155" : "none", borderRadius: 10, padding: "12px 0", color: profile?.plan === pack.id ? "#64748b" : "#070d1a", fontFamily: "'Space Grotesk',sans-serif", fontWeight: 700, fontSize: 13, cursor: (loading || profile?.plan === pack.id) ? "not-allowed" : "pointer", display: "flex", alignItems: "center", justifyContent: "center", gap: 6, opacity: loading ? 0.7 : 1, marginTop: "auto" }}
                   >
                     {loading === pack.id ? <><Spinner /> Se procesează...</> : profile?.plan === pack.id ? "Plan activ" : "Abonează-te"}
                   </button>

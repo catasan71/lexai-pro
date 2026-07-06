@@ -15,13 +15,13 @@ export function Modal({ type, onClose }: ModalProps) {
   const isMobile = useIsMobile();
   if (!type) return null;
   const titles: Record<string, string> = { terms:"Termeni și Condiții", gdpr:"GDPR & Confidențialitate", cookies:"Politica Cookies", contact:"Contact" };
-  const INP = { background:"#070d1a",border:"1px solid #1e293b",borderRadius:10,padding:"11px 14px",color:"#e2e8f0",fontSize:14,fontFamily:"'DM Sans',sans-serif",width:"100%",boxSizing:"border-box" as const,outline:"none" };
+  const INP = { background:"#070d1a",border:"1px solid #1e293b",borderRadius:10,padding:"11px 14px",color:"#e2e8f0",fontSize:14,fontFamily:"'Inter',sans-serif",width:"100%",boxSizing:"border-box" as const,outline:"none" };
   return (
     <div style={{ position:"fixed",inset:0,background:"rgba(0,0,0,.85)",backdropFilter:"blur(8px)",zIndex:1000,display:"flex",alignItems:isMobile?"flex-end":"center",justifyContent:"center",padding:isMobile?0:20 }} onClick={e=>e.target===e.currentTarget&&onClose()}>
       {toast && <Toast msg={toast.msg} type={toast.type} onClose={()=>setToast(null)} />}
       <div style={{ background:"#0f172a",border:"1px solid #1e293b",borderRadius:isMobile?"20px 20px 0 0":20,width:"100%",maxWidth:isMobile?"100%":680,maxHeight:isMobile?"90vh":"82vh",overflowY:"auto",padding:isMobile?"24px 20px":36,animation:"fadeUp .3s ease" }}>
         <div style={{ display:"flex",justifyContent:"space-between",alignItems:"center",marginBottom:24 }}>
-          <h2 style={{ fontFamily:"'Syne',sans-serif",fontWeight:800,fontSize:isMobile?18:22,color:"#e2e8f0",margin:0 }}>{titles[type]}</h2>
+          <h2 style={{ fontFamily:"'Space Grotesk',sans-serif",fontWeight:800,fontSize:isMobile?18:22,color:"#e2e8f0",margin:0 }}>{titles[type]}</h2>
           <button onClick={onClose} style={{ background:"#1e293b",border:"none",color:"#94a3b8",width:32,height:32,borderRadius:8,cursor:"pointer",fontSize:18,display:"flex",alignItems:"center",justifyContent:"center",flexShrink:0 }}>×</button>
         </div>
         {type==="terms" && (
@@ -55,9 +55,9 @@ export function Modal({ type, onClose }: ModalProps) {
         {type==="contact" && (sent ? (
           <div style={{ textAlign:"center",padding:"32px 0" }}>
             <div style={{ fontSize:48,marginBottom:12 }}>✅</div>
-            <h3 style={{ color:"#10b981",fontFamily:"'Syne',sans-serif",fontWeight:800,fontSize:20,marginBottom:10 }}>Mesaj trimis!</h3>
+            <h3 style={{ color:"#10b981",fontFamily:"'Space Grotesk',sans-serif",fontWeight:800,fontSize:20,marginBottom:10 }}>Mesaj trimis!</h3>
             <p style={{ color:"#94a3b8",fontSize:14 }}>Îți răspundem în maxim 48h.</p>
-            <button onClick={onClose} style={{ marginTop:20,background:"linear-gradient(135deg,#818cf8,#6ee7b7)",border:"none",borderRadius:10,padding:"12px 28px",color:"#070d1a",fontFamily:"'Syne',sans-serif",fontWeight:700,cursor:"pointer" }}>Închide</button>
+            <button onClick={onClose} style={{ marginTop:20,background:"linear-gradient(135deg,#818cf8,#6ee7b7)",border:"none",borderRadius:10,padding:"12px 28px",color:"#070d1a",fontFamily:"'Space Grotesk',sans-serif",fontWeight:700,cursor:"pointer" }}>Închide</button>
           </div>
         ) : (
           <div>
@@ -70,7 +70,7 @@ export function Modal({ type, onClose }: ModalProps) {
               <input placeholder="Nume *" value={cf.name} onChange={e=>setCf({...cf,name:e.target.value})} style={INP} />
               <input placeholder="Email *" value={cf.email} onChange={e=>setCf({...cf,email:e.target.value})} style={INP} />
               <textarea placeholder="Mesaj *" rows={4} value={cf.msg} onChange={e=>setCf({...cf,msg:e.target.value})} style={{ ...INP,resize:"vertical" }} />
-              <button onClick={()=>{ if(!cf.name||!cf.email||!cf.msg){setToast({msg:"Toate câmpurile sunt obligatorii.",type:"error"});return;} setSent(true); }} style={{ background:"linear-gradient(135deg,#818cf8,#6ee7b7)",border:"none",borderRadius:10,padding:14,color:"#070d1a",fontFamily:"'Syne',sans-serif",fontWeight:700,fontSize:15,cursor:"pointer" }}>✉️ Trimite Mesaj</button>
+              <button onClick={()=>{ if(!cf.name||!cf.email||!cf.msg){setToast({msg:"Toate câmpurile sunt obligatorii.",type:"error"});return;} setSent(true); }} style={{ background:"linear-gradient(135deg,#818cf8,#6ee7b7)",border:"none",borderRadius:10,padding:14,color:"#070d1a",fontFamily:"'Space Grotesk',sans-serif",fontWeight:700,fontSize:15,cursor:"pointer" }}>✉️ Trimite Mesaj</button>
             </div>
           </div>
         ))}

@@ -92,38 +92,38 @@ export default function AnalysisModule({ showToast }) {
           <div style={{ color:"#475569",fontSize:11,marginTop:8 }}>{text.length.toLocaleString("ro-RO")} caractere</div>
         </div>
       )}
-      <button onClick={analyze} disabled={loading||!text} style={{ width:"100%",background:!text?"#1e293b":"linear-gradient(135deg,#818cf8,#6ee7b7)",border:"none",borderRadius:11,padding:13,color:!text?"#475569":"#070d1a",fontFamily:"'Syne',sans-serif",fontWeight:700,fontSize:14,cursor:(!text||loading)?"not-allowed":"pointer",display:"flex",alignItems:"center",justifyContent:"center",gap:8,opacity:loading?.7:1,marginBottom:16 }}>
+      <button onClick={analyze} disabled={loading||!text} style={{ width:"100%",background:!text?"#1e293b":"linear-gradient(135deg,#818cf8,#6ee7b7)",border:"none",borderRadius:11,padding:13,color:!text?"#475569":"#070d1a",fontFamily:"'Space Grotesk',sans-serif",fontWeight:700,fontSize:14,cursor:(!text||loading)?"not-allowed":"pointer",display:"flex",alignItems:"center",justifyContent:"center",gap:8,opacity:loading?.7:1,marginBottom:16 }}>
         {loading ? <><Spinner /> Analizează...</> : "🔍 Analizează Contractul"}
       </button>
       <div style={{ background:"#0f172a",border:"1px solid #1e293b",borderRadius:12,padding:14 }}>
         <div style={{ color:"#64748b",fontSize:11,fontWeight:700,marginBottom:8,textTransform:"uppercase",letterSpacing:.5 }}>Sau paste text direct:</div>
-        <textarea rows={5} value={text} onChange={e=>setText(e.target.value)} style={{ background:"#070d1a",border:"1px solid #1e293b",borderRadius:8,padding:"10px 13px",color:"#94a3b8",fontSize:12,fontFamily:"'DM Sans',sans-serif",width:"100%",boxSizing:"border-box",outline:"none",resize:"vertical",lineHeight:1.5 }} placeholder="Lipește textul contractului..." />
+        <textarea rows={5} value={text} onChange={e=>setText(e.target.value)} style={{ background:"#070d1a",border:"1px solid #1e293b",borderRadius:8,padding:"10px 13px",color:"#94a3b8",fontSize:12,fontFamily:"'Inter',sans-serif",width:"100%",boxSizing:"border-box",outline:"none",resize:"vertical",lineHeight:1.5 }} placeholder="Lipește textul contractului..." />
       </div>
     </div>
   );
 
   var resultContent = (
     <div style={{ overflowY:"auto",padding:isMobile?16:24,flex:1 }}>
-      {isMobile && <button onClick={()=>setPanel("upload")} style={{ background:"#1e293b",border:"none",borderRadius:8,padding:"8px 14px",color:"#94a3b8",cursor:"pointer",fontSize:13,fontFamily:"'DM Sans',sans-serif",marginBottom:16,display:"flex",alignItems:"center",gap:6 }}>← Upload</button>}
+      {isMobile && <button onClick={()=>setPanel("upload")} style={{ background:"#1e293b",border:"none",borderRadius:8,padding:"8px 14px",color:"#94a3b8",cursor:"pointer",fontSize:13,fontFamily:"'Inter',sans-serif",marginBottom:16,display:"flex",alignItems:"center",gap:6 }}>← Upload</button>}
       {result ? (
         <div>
           <div style={{ display:"flex",justifyContent:"flex-end",marginBottom:12 }}>
-            <button onClick={doExportPdf} disabled={loadExp} style={{ background:"#1e293b",border:"1px solid #334155",borderRadius:8,padding:"6px 14px",color:"#f472b6",fontFamily:"'Syne',sans-serif",fontWeight:600,fontSize:12,cursor:loadExp?"not-allowed":"pointer",display:"flex",alignItems:"center",gap:6,opacity:loadExp?.7:1 }}>
+            <button onClick={doExportPdf} disabled={loadExp} style={{ background:"#1e293b",border:"1px solid #334155",borderRadius:8,padding:"6px 14px",color:"#f472b6",fontFamily:"'Space Grotesk',sans-serif",fontWeight:600,fontSize:12,cursor:loadExp?"not-allowed":"pointer",display:"flex",alignItems:"center",gap:6,opacity:loadExp?.7:1 }}>
               {loadExp?<><Spinner/>Se exportă...</>:"📕 Export PDF Raport"}
             </button>
           </div>
           <div style={{ display:"grid",gridTemplateColumns:"1fr 1fr 1fr",gap:10,marginBottom:20 }}>
             <div style={{ background:"#0f172a",border:"1px solid "+(SC[result.rezumat&&result.rezumat.scor]||"#818cf8")+"30",borderRadius:12,padding:14,textAlign:"center" }}>
               <div style={{ color:"#64748b",fontSize:10,marginBottom:6 }}>SCOR RISC</div>
-              <div style={{ fontFamily:"'Syne',sans-serif",fontWeight:800,fontSize:isMobile?18:24,color:SC[result.rezumat&&result.rezumat.scor]||"#818cf8" }}>{result.rezumat&&result.rezumat.scor||"N/A"}</div>
+              <div style={{ fontFamily:"'Space Grotesk',sans-serif",fontWeight:800,fontSize:isMobile?18:24,color:SC[result.rezumat&&result.rezumat.scor]||"#818cf8" }}>{result.rezumat&&result.rezumat.scor||"N/A"}</div>
             </div>
             <div style={{ background:"#0f172a",border:"1px solid #1e293b",borderRadius:12,padding:14,textAlign:"center" }}>
               <div style={{ color:"#64748b",fontSize:10,marginBottom:6 }}>TIP CONTRACT</div>
-              <div style={{ fontFamily:"'Syne',sans-serif",fontWeight:700,fontSize:11,color:"#e2e8f0",lineHeight:1.3 }}>{result.rezumat&&result.rezumat.tip||"—"}</div>
+              <div style={{ fontFamily:"'Space Grotesk',sans-serif",fontWeight:700,fontSize:11,color:"#e2e8f0",lineHeight:1.3 }}>{result.rezumat&&result.rezumat.tip||"—"}</div>
             </div>
             <div style={{ background:"#0f172a",border:"1px solid "+(result.avocat&&result.avocat.necesar?"#ef444430":"#10b98130"),borderRadius:12,padding:14,textAlign:"center" }}>
               <div style={{ color:"#64748b",fontSize:10,marginBottom:6 }}>AVOCAT</div>
-              <div style={{ fontFamily:"'Syne',sans-serif",fontWeight:800,fontSize:isMobile?16:20,color:result.avocat&&result.avocat.necesar?"#ef4444":"#10b981" }}>{result.avocat&&result.avocat.necesar?"DA":"NU"}</div>
+              <div style={{ fontFamily:"'Space Grotesk',sans-serif",fontWeight:800,fontSize:isMobile?16:20,color:result.avocat&&result.avocat.necesar?"#ef4444":"#10b981" }}>{result.avocat&&result.avocat.necesar?"DA":"NU"}</div>
             </div>
           </div>
           {result.riscuri&&result.riscuri.length>0 && (
@@ -160,7 +160,7 @@ export default function AnalysisModule({ showToast }) {
               <div style={{ color:"#818cf8",fontSize:11,fontWeight:700,marginBottom:12,textTransform:"uppercase",letterSpacing:.5 }}>🎯 Recomandări</div>
               {result.recomandari.map(function(r,i){ return (
                 <div key={i} style={{ display:"flex",gap:10,marginBottom:9,alignItems:"flex-start" }}>
-                  <span style={{ color:"#818cf8",fontFamily:"'Syne',sans-serif",fontWeight:800,fontSize:14,flexShrink:0 }}>{i+1}.</span>
+                  <span style={{ color:"#818cf8",fontFamily:"'Space Grotesk',sans-serif",fontWeight:800,fontSize:14,flexShrink:0 }}>{i+1}.</span>
                   <span style={{ color:"#94a3b8",fontSize:13,lineHeight:1.5 }}>{r}</span>
                 </div>
               ); })}
@@ -170,7 +170,7 @@ export default function AnalysisModule({ showToast }) {
       ) : (
         <div style={{ display:"flex",flexDirection:"column",alignItems:"center",justifyContent:"center",minHeight:240,textAlign:"center",padding:20 }}>
           <div style={{ fontSize:52,marginBottom:14 }}>🔍</div>
-          <div style={{ fontFamily:"'Syne',sans-serif",fontWeight:700,fontSize:16,color:"#475569",marginBottom:8 }}>Niciun contract analizat</div>
+          <div style={{ fontFamily:"'Space Grotesk',sans-serif",fontWeight:700,fontSize:16,color:"#475569",marginBottom:8 }}>Niciun contract analizat</div>
           <div style={{ fontSize:13,color:"#334155",maxWidth:280 }}>Încarcă un fișier și apasă „Analizează Contractul".</div>
         </div>
       )}
@@ -181,7 +181,7 @@ export default function AnalysisModule({ showToast }) {
     <div style={{ display:"flex",flexDirection:"column",height:"100%",overflow:"hidden" }}>
       <div style={{ display:"flex",borderBottom:"1px solid #1e293b",flexShrink:0 }}>
         {[["upload","📂 Upload"],["result","📊 Raport"]].map(function(x){ return (
-          <button key={x[0]} onClick={()=>setPanel(x[0])} style={{ flex:1,background:panel===x[0]?"#1e293b":"none",border:"none",borderBottom:"2px solid "+(panel===x[0]?"#818cf8":"transparent"),padding:"12px 0",color:panel===x[0]?"#e2e8f0":"#64748b",fontFamily:"'Syne',sans-serif",fontWeight:700,fontSize:13,cursor:"pointer" }}>{x[1]}</button>
+          <button key={x[0]} onClick={()=>setPanel(x[0])} style={{ flex:1,background:panel===x[0]?"#1e293b":"none",border:"none",borderBottom:"2px solid "+(panel===x[0]?"#818cf8":"transparent"),padding:"12px 0",color:panel===x[0]?"#e2e8f0":"#64748b",fontFamily:"'Space Grotesk',sans-serif",fontWeight:700,fontSize:13,cursor:"pointer" }}>{x[1]}</button>
         ); })}
       </div>
       {panel==="upload" ? uploadContent : resultContent}

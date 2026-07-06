@@ -37,8 +37,8 @@ export const gradient = {
 } as const;
 
 export const fonts = {
-  display: "'Syne',sans-serif",
-  body: "'DM Sans',sans-serif",
+  display: "'Space Grotesk',sans-serif",
+  body: "'Inter',sans-serif",
 } as const;
 
 /** Risk-severity → color map (Romanian labels, incl. diacritic variants). */

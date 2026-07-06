@@ -77,7 +77,7 @@ export default function ContModule({ showToast }: { showToast: ShowToast }) {
   return (
     <div style={{ overflowY: "auto", padding: isMobile ? 16 : 28, height: "100%" }}>
       <div style={{ maxWidth: 640, margin: "0 auto" }}>
-        <h2 style={{ fontFamily: "'Syne',sans-serif", fontWeight: 800, fontSize: isMobile ? 18 : 22, color: "#e2e8f0", marginBottom: 20 }}>Contul meu</h2>
+        <h2 style={{ fontFamily: "'Space Grotesk',sans-serif", fontWeight: 800, fontSize: isMobile ? 18 : 22, color: "#e2e8f0", marginBottom: 20 }}>Contul meu</h2>
 
         <div style={CARD}>
           <div style={{ color: "#64748b", fontSize: 11, fontWeight: 700, textTransform: "uppercase", letterSpacing: 0.5, marginBottom: 10 }}>Date de identificare</div>
@@ -96,7 +96,7 @@ export default function ContModule({ showToast }: { showToast: ShowToast }) {
           <button
             onClick={exportData}
             disabled={exporting}
-            style={{ background: "#1e293b", border: "1px solid #334155", borderRadius: 9, padding: "11px 18px", color: "#e2e8f0", fontFamily: "'Syne',sans-serif", fontWeight: 700, fontSize: 13, cursor: exporting ? "not-allowed" : "pointer", display: "flex", alignItems: "center", gap: 8, opacity: exporting ? 0.7 : 1 }}
+            style={{ background: "#1e293b", border: "1px solid #334155", borderRadius: 9, padding: "11px 18px", color: "#e2e8f0", fontFamily: "'Space Grotesk',sans-serif", fontWeight: 700, fontSize: 13, cursor: exporting ? "not-allowed" : "pointer", display: "flex", alignItems: "center", gap: 8, opacity: exporting ? 0.7 : 1 }}
           >
             {exporting ? <><Spinner /> Se generează...</> : "⬇️ Exportă datele mele (JSON)"}
           </button>
@@ -110,7 +110,7 @@ export default function ContModule({ showToast }: { showToast: ShowToast }) {
           {!confirmDelete ? (
             <button
               onClick={() => setConfirmDelete(true)}
-              style={{ background: "transparent", border: "1px solid #f8717150", borderRadius: 9, padding: "11px 18px", color: "#f87171", fontFamily: "'Syne',sans-serif", fontWeight: 700, fontSize: 13, cursor: "pointer" }}
+              style={{ background: "transparent", border: "1px solid #f8717150", borderRadius: 9, padding: "11px 18px", color: "#f87171", fontFamily: "'Space Grotesk',sans-serif", fontWeight: 700, fontSize: 13, cursor: "pointer" }}
             >
               🗑️ Șterge contul
             </button>
@@ -119,14 +119,14 @@ export default function ContModule({ showToast }: { showToast: ShowToast }) {
               <button
                 onClick={deleteAccount}
                 disabled={deleting}
-                style={{ background: "#f87171", border: "none", borderRadius: 9, padding: "11px 18px", color: "#070d1a", fontFamily: "'Syne',sans-serif", fontWeight: 700, fontSize: 13, cursor: deleting ? "not-allowed" : "pointer", display: "flex", alignItems: "center", gap: 8, opacity: deleting ? 0.7 : 1 }}
+                style={{ background: "#f87171", border: "none", borderRadius: 9, padding: "11px 18px", color: "#070d1a", fontFamily: "'Space Grotesk',sans-serif", fontWeight: 700, fontSize: 13, cursor: deleting ? "not-allowed" : "pointer", display: "flex", alignItems: "center", gap: 8, opacity: deleting ? 0.7 : 1 }}
               >
                 {deleting ? <><Spinner /> Se șterge...</> : "Confirmă ștergerea definitivă"}
               </button>
               <button
                 onClick={() => setConfirmDelete(false)}
                 disabled={deleting}
-                style={{ background: "#1e293b", border: "1px solid #334155", borderRadius: 9, padding: "11px 18px", color: "#94a3b8", fontFamily: "'Syne',sans-serif", fontWeight: 700, fontSize: 13, cursor: "pointer" }}
+                style={{ background: "#1e293b", border: "1px solid #334155", borderRadius: 9, padding: "11px 18px", color: "#94a3b8", fontFamily: "'Space Grotesk',sans-serif", fontWeight: 700, fontSize: 13, cursor: "pointer" }}
               >
                 Anulează
               </button>

@@ -51,7 +51,7 @@ export default function HistoryModule({ showToast }: { showToast: ShowToast }) {
     <div style={{ overflowY: "auto", padding: isMobile ? 16 : 24, height: "100%" }}>
       <div style={{ display:"flex",justifyContent:"space-between",alignItems:"center",marginBottom:16,flexWrap:"wrap",gap:8 }}>
         <div style={{ color:"#818cf8",fontSize:11,fontWeight:700,textTransform:"uppercase",letterSpacing:.5 }}>🗂️ Istoric documente</div>
-        <button onClick={load} style={{ background:"#1e293b",border:"1px solid #334155",borderRadius:8,padding:"6px 12px",color:"#94a3b8",cursor:"pointer",fontSize:12,fontFamily:"'DM Sans',sans-serif" }}>↻ Reîmprospătează</button>
+        <button onClick={load} style={{ background:"#1e293b",border:"1px solid #334155",borderRadius:8,padding:"6px 12px",color:"#94a3b8",cursor:"pointer",fontSize:12,fontFamily:"'Inter',sans-serif" }}>↻ Reîmprospătează</button>
       </div>
 
       {loading ? (
@@ -61,7 +61,7 @@ export default function HistoryModule({ showToast }: { showToast: ShowToast }) {
       ) : docs.length === 0 ? (
         <div style={{ display:"flex",flexDirection:"column",alignItems:"center",justifyContent:"center",minHeight:240,textAlign:"center",padding:20 }}>
           <div style={{ fontSize:52,marginBottom:14 }}>🗂️</div>
-          <div style={{ fontFamily:"'Syne',sans-serif",fontWeight:700,fontSize:16,color:"#475569",marginBottom:8 }}>Niciun document salvat</div>
+          <div style={{ fontFamily:"'Space Grotesk',sans-serif",fontWeight:700,fontSize:16,color:"#475569",marginBottom:8 }}>Niciun document salvat</div>
           <div style={{ fontSize:13,color:"#334155",maxWidth:320,lineHeight:1.5 }}>Tot ce generezi (contracte, email-uri, analize) apare aici automat.</div>
         </div>
       ) : (
@@ -82,7 +82,7 @@ export default function HistoryModule({ showToast }: { showToast: ShowToast }) {
                   <button onClick={(e)=>{ e.stopPropagation(); remove(doc.id); }} title="Șterge" style={{ background:"#1e293b",border:"1px solid #334155",borderRadius:8,padding:"5px 10px",color:"#ef4444",cursor:"pointer",fontSize:12,flexShrink:0 }}>🗑️</button>
                 </div>
                 {isOpen && (
-                  <div style={{ background:"#0a1628",borderTop:"1px solid #1e293b",padding:16,whiteSpace:"pre-wrap",fontSize:12,color:"#94a3b8",lineHeight:1.7,maxHeight:360,overflowY:"auto",fontFamily:"'DM Sans',sans-serif" }}>
+                  <div style={{ background:"#0a1628",borderTop:"1px solid #1e293b",padding:16,whiteSpace:"pre-wrap",fontSize:12,color:"#94a3b8",lineHeight:1.7,maxHeight:360,overflowY:"auto",fontFamily:"'Inter',sans-serif" }}>
                     {renderContent(doc)}
                   </div>
                 )}

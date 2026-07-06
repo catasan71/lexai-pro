@@ -30,7 +30,7 @@ export default function ContractModule({ showToast }) {
   };
   const upd = (k,v) => setForm(function(f){ var n={};Object.assign(n,f);n[k]=v;return n; });
   const toggleSel = i => setSel(function(s){ return s.indexOf(i)>=0 ? s.filter(function(x){return x!==i;}) : s.concat([i]); });
-  const INP = { background:"#0f172a",border:"1px solid #1e293b",borderRadius:10,padding:"10px 14px",color:"#e2e8f0",fontSize:13,fontFamily:"'DM Sans',sans-serif",width:"100%",boxSizing:"border-box",outline:"none" };
+  const INP = { background:"#0f172a",border:"1px solid #1e293b",borderRadius:10,padding:"10px 14px",color:"#e2e8f0",fontSize:13,fontFamily:"'Inter',sans-serif",width:"100%",boxSizing:"border-box",outline:"none" };
   const LBL = { color:"#64748b",fontSize:11,marginBottom:5,display:"block",fontWeight:600,textTransform:"uppercase",letterSpacing:.4 };
 
   var suggestClauses = async function() {
@@ -104,10 +104,10 @@ export default function ContractModule({ showToast }) {
         <div style={{ marginTop:10 }}><label style={LBL}>Obiectul contractului *</label><textarea rows={3} value={form.object} onChange={e=>upd("object",e.target.value)} style={{ ...INP,resize:"vertical" }} placeholder="Descrieți obiectul contractului..." /></div>
       </div>
       <div style={{ display:"flex",gap:10,flexDirection:isMobile?"column":"row" }}>
-        <button onClick={suggestClauses} disabled={loadC} style={{ flex:1,background:"#1e293b",border:"1px solid #334155",borderRadius:10,padding:"12px",color:"#e2e8f0",fontFamily:"'Syne',sans-serif",fontWeight:700,fontSize:13,cursor:loadC?"not-allowed":"pointer",display:"flex",alignItems:"center",justifyContent:"center",gap:8,opacity:loadC?.7:1 }}>
+        <button onClick={suggestClauses} disabled={loadC} style={{ flex:1,background:"#1e293b",border:"1px solid #334155",borderRadius:10,padding:"12px",color:"#e2e8f0",fontFamily:"'Space Grotesk',sans-serif",fontWeight:700,fontSize:13,cursor:loadC?"not-allowed":"pointer",display:"flex",alignItems:"center",justifyContent:"center",gap:8,opacity:loadC?.7:1 }}>
           {loadC ? <><Spinner /> Se generează...</> : "✨ Sugerează Clauze AI"}
         </button>
-        <button onClick={generateContract} disabled={loadG} style={{ flex:1,background:"linear-gradient(135deg,#818cf8,#6ee7b7)",border:"none",borderRadius:10,padding:"12px",color:"#070d1a",fontFamily:"'Syne',sans-serif",fontWeight:700,fontSize:13,cursor:loadG?"not-allowed":"pointer",display:"flex",alignItems:"center",justifyContent:"center",gap:8,opacity:loadG?.7:1 }}>
+        <button onClick={generateContract} disabled={loadG} style={{ flex:1,background:"linear-gradient(135deg,#818cf8,#6ee7b7)",border:"none",borderRadius:10,padding:"12px",color:"#070d1a",fontFamily:"'Space Grotesk',sans-serif",fontWeight:700,fontSize:13,cursor:loadG?"not-allowed":"pointer",display:"flex",alignItems:"center",justifyContent:"center",gap:8,opacity:loadG?.7:1 }}>
           {loadG ? <><Spinner /> Se generează...</> : "📄 Generează Contract"}
         </button>
       </div>
@@ -116,7 +116,7 @@ export default function ContractModule({ showToast }) {
 
   var resultContent = (
     <div style={{ overflowY:"auto",padding:isMobile?16:24,flex:1 }}>
-      {isMobile && <button onClick={()=>setPanel("form")} style={{ background:"#1e293b",border:"none",borderRadius:8,padding:"8px 14px",color:"#94a3b8",cursor:"pointer",fontSize:13,fontFamily:"'DM Sans',sans-serif",marginBottom:16,display:"flex",alignItems:"center",gap:6 }}>← Formular</button>}
+      {isMobile && <button onClick={()=>setPanel("form")} style={{ background:"#1e293b",border:"none",borderRadius:8,padding:"8px 14px",color:"#94a3b8",cursor:"pointer",fontSize:13,fontFamily:"'Inter',sans-serif",marginBottom:16,display:"flex",alignItems:"center",gap:6 }}>← Formular</button>}
       {clauses.length>0 && (
         <div style={{ marginBottom:20 }}>
           <div style={{ color:"#818cf8",fontSize:11,fontWeight:700,marginBottom:12,textTransform:"uppercase",letterSpacing:.5 }}>✨ Clauze Sugerate — selectează pentru incluziune</div>
@@ -136,21 +136,21 @@ export default function ContractModule({ showToast }) {
           <div style={{ display:"flex",justifyContent:"space-between",alignItems:"center",marginBottom:10,flexWrap:"wrap",gap:8 }}>
             <div style={{ color:"#10b981",fontSize:11,fontWeight:700,textTransform:"uppercase",letterSpacing:.5 }}>📄 Contract Generat</div>
             <div style={{ display:"flex",gap:8,flexWrap:"wrap" }}>
-              <button onClick={()=>{navigator.clipboard.writeText(contract);showToast("Contract copiat!","success");}} style={{ background:"#1e293b",border:"1px solid #334155",borderRadius:8,padding:"6px 12px",color:"#e2e8f0",fontFamily:"'Syne',sans-serif",fontWeight:600,fontSize:12,cursor:"pointer" }}>📋 Copiază</button>
-              <button onClick={()=>doExport("docx")} disabled={!!loadExp} style={{ background:"#1e293b",border:"1px solid #334155",borderRadius:8,padding:"6px 12px",color:"#818cf8",fontFamily:"'Syne',sans-serif",fontWeight:600,fontSize:12,cursor:loadExp?"not-allowed":"pointer",display:"flex",alignItems:"center",gap:5,opacity:loadExp?.7:1 }}>
+              <button onClick={()=>{navigator.clipboard.writeText(contract);showToast("Contract copiat!","success");}} style={{ background:"#1e293b",border:"1px solid #334155",borderRadius:8,padding:"6px 12px",color:"#e2e8f0",fontFamily:"'Space Grotesk',sans-serif",fontWeight:600,fontSize:12,cursor:"pointer" }}>📋 Copiază</button>
+              <button onClick={()=>doExport("docx")} disabled={!!loadExp} style={{ background:"#1e293b",border:"1px solid #334155",borderRadius:8,padding:"6px 12px",color:"#818cf8",fontFamily:"'Space Grotesk',sans-serif",fontWeight:600,fontSize:12,cursor:loadExp?"not-allowed":"pointer",display:"flex",alignItems:"center",gap:5,opacity:loadExp?.7:1 }}>
                 {loadExp==="docx"?<><Spinner/>...</>:"📝 Word"}
               </button>
-              <button onClick={()=>doExport("pdf")} disabled={!!loadExp} style={{ background:"#1e293b",border:"1px solid #334155",borderRadius:8,padding:"6px 12px",color:"#f472b6",fontFamily:"'Syne',sans-serif",fontWeight:600,fontSize:12,cursor:loadExp?"not-allowed":"pointer",display:"flex",alignItems:"center",gap:5,opacity:loadExp?.7:1 }}>
+              <button onClick={()=>doExport("pdf")} disabled={!!loadExp} style={{ background:"#1e293b",border:"1px solid #334155",borderRadius:8,padding:"6px 12px",color:"#f472b6",fontFamily:"'Space Grotesk',sans-serif",fontWeight:600,fontSize:12,cursor:loadExp?"not-allowed":"pointer",display:"flex",alignItems:"center",gap:5,opacity:loadExp?.7:1 }}>
                 {loadExp==="pdf"?<><Spinner/>...</>:"📕 PDF"}
               </button>
             </div>
           </div>
-          <div style={{ background:"#0a1628",border:"1px solid #1e293b",borderRadius:12,padding:18,whiteSpace:"pre-wrap",fontSize:12,color:"#94a3b8",lineHeight:1.8,maxHeight:400,overflowY:"auto",fontFamily:"'DM Sans',sans-serif" }}>{contract}</div>
+          <div style={{ background:"#0a1628",border:"1px solid #1e293b",borderRadius:12,padding:18,whiteSpace:"pre-wrap",fontSize:12,color:"#94a3b8",lineHeight:1.8,maxHeight:400,overflowY:"auto",fontFamily:"'Inter',sans-serif" }}>{contract}</div>
         </div>
       ) : !clauses.length && (
         <div style={{ display:"flex",flexDirection:"column",alignItems:"center",justifyContent:"center",minHeight:240,textAlign:"center",padding:20 }}>
           <div style={{ fontSize:52,marginBottom:14 }}>📜</div>
-          <div style={{ fontFamily:"'Syne',sans-serif",fontWeight:700,fontSize:16,color:"#475569",marginBottom:8 }}>Niciun contract generat</div>
+          <div style={{ fontFamily:"'Space Grotesk',sans-serif",fontWeight:700,fontSize:16,color:"#475569",marginBottom:8 }}>Niciun contract generat</div>
           <div style={{ fontSize:13,color:"#334155",maxWidth:280,lineHeight:1.5 }}>Completează formularul și apasă „Generează Contract".</div>
         </div>
       )}
@@ -161,7 +161,7 @@ export default function ContractModule({ showToast }) {
     <div style={{ display:"flex",flexDirection:"column",height:"100%",overflow:"hidden" }}>
       <div style={{ display:"flex",borderBottom:"1px solid #1e293b",flexShrink:0 }}>
         {[["form","✏️ Formular"],["result","📄 Rezultat"]].map(function(x){ return (
-          <button key={x[0]} onClick={()=>setPanel(x[0])} style={{ flex:1,background:panel===x[0]?"#1e293b":"none",border:"none",borderBottom:"2px solid "+(panel===x[0]?"#818cf8":"transparent"),padding:"12px 0",color:panel===x[0]?"#e2e8f0":"#64748b",fontFamily:"'Syne',sans-serif",fontWeight:700,fontSize:13,cursor:"pointer" }}>{x[1]}</button>
+          <button key={x[0]} onClick={()=>setPanel(x[0])} style={{ flex:1,background:panel===x[0]?"#1e293b":"none",border:"none",borderBottom:"2px solid "+(panel===x[0]?"#818cf8":"transparent"),padding:"12px 0",color:panel===x[0]?"#e2e8f0":"#64748b",fontFamily:"'Space Grotesk',sans-serif",fontWeight:700,fontSize:13,cursor:"pointer" }}>{x[1]}</button>
         ); })}
       </div>
       {panel==="form" ? formContent : resultContent}
