@@ -8,72 +8,146 @@ import { ScrollTrigger } from "gsap/ScrollTrigger";
 
 gsap.registerPlugin(ScrollTrigger);
 
-// Three.js hero — chunk separat, nu blochează First Paint
 const HeroThree = lazy(() => import("../components/HeroThree"));
 
+// ─── date statice ────────────────────────────────────────────────────────────
+const FEATURES = [
+  { icon: "📜", color: "#818cf8", title: "Generator Contracte", desc: "46 tipuri conforme legislației române 2025, generate instant cu AI Claude.", tag: "Popular" },
+  { icon: "📧", color: "#6ee7b7", title: "Email-uri Juridice",  desc: "Notificări, somații, corespondenţă profesională pe orice ton, instant.", tag: null },
+  { icon: "🔍", color: "#f59e0b", title: "Analiză Riscuri",     desc: "Upload PDF/DOCX și primești un raport complet de riscuri și clauze lipsă.", tag: "Nou" },
+  { icon: "📨", color: "#f472b6", title: "Documente HR",        desc: "Decizii concediere, sancțiuni, procuri și plângeri generate în secunde.", tag: null },
+  { icon: "📕", color: "#34d399", title: "Export PDF & Word",   desc: "Descarcă orice document în format profesional .pdf sau .docx, cu branding.", tag: null },
+  { icon: "🔒", color: "#a78bfa", title: "GDPR & Securitate",   desc: "Date criptate, stocare UE, cookie consent, export & ștergere cont.", tag: null },
+];
+
+const STEPS = [
+  { n: "01", icon: "🎯", color: "#818cf8", title: "Alege tipul documentului", desc: "Selectează din 46+ tipuri: contracte, emailuri, documente HR, notificări." },
+  { n: "02", icon: "📝", color: "#6ee7b7", title: "Completează câteva câmpuri", desc: "Datele părților, valoarea, durata — formularul e simplu, sub 2 minute." },
+  { n: "03", icon: "⚡", color: "#f59e0b", title: "AI generează instant",       desc: "Claude Sonnet analizează legislația română în vigoare și redactează formal." },
+  { n: "04", icon: "✅", color: "#f472b6", title: "Descarcă și folosește",      desc: "Export PDF sau Word profesional. Gata de semnat sau trimis la avocat." },
+];
+
+const COMPARISON = [
+  {
+    label: "Redactezi singur", color: "#64748b", highlight: false,
+    rows: [
+      ["⏱️ 2–4 ore per document", false],
+      ["⚠️ Greșeli legislative frecvente", false],
+      ["📚 Necesită cunoștințe juridice", false],
+      ["🚫 Fără analiză de riscuri", false],
+      ["💸 0 RON… + risc financiar mare", false],
+    ],
+  },
+  {
+    label: "Avocat tradițional", color: "#f59e0b", highlight: false,
+    rows: [
+      ["✅ Expert juridic uman", true],
+      ["❌ 300–1000 RON / document", false],
+      ["❌ Timp de așteptare 24–72h", false],
+      ["✅ Personalizat pe situația ta", true],
+      ["❌ Inaccesibil în afara orelor", false],
+    ],
+  },
+  {
+    label: "LexAI Pro", color: "#818cf8", highlight: true,
+    rows: [
+      ["✅ AI antrenat pe legea română", true],
+      ["✅ 0.5–6 credite / document", true],
+      ["✅ Sub 30 secunde", true],
+      ["✅ Analiză riscuri automată", true],
+      ["✅ Disponibil 24/7, oricând", true],
+    ],
+  },
+];
+
+const QUALITY = [
+  { icon: "🇷🇴", label: "Legislație română 2025", color: "#818cf8" },
+  { icon: "⚡", label: "Sub 30 de secunde",        color: "#6ee7b7" },
+  { icon: "🔒", label: "GDPR & date în UE",       color: "#f59e0b" },
+  { icon: "📜", label: "46+ tipuri de documente",  color: "#f472b6" },
+  { icon: "🎯", label: "98% satisfacție clienți",  color: "#34d399" },
+];
+
+const TESTIMONIALS = [
+  { name: "Andreea M.", role: "CEO, Agenție Marketing", initials: "AM", text: "\"Am economisit câteva mii de RON în avocați. Contractele sunt impecabile și le revizuiesc rapid înainte de semnat.\"", stars: 5 },
+  { name: "Radu C.",    role: "Fondator SaaS B2B",       initials: "RC", text: "\"Analiza de riscuri pe PDF-uri a schimbat felul în care negociez contractele cu partenerii. Știu exact ce să cer.\"", stars: 5 },
+  { name: "Mihaela T.", role: "Administrator SRL",       initials: "MT", text: "\"Deciziile HR și notificările le generez în 3 minute. Înainte plăteam un consultant pe oră pentru asta.\"", stars: 5 },
+];
+
+const FAQS = [
+  { q: "Documentele generate sunt valabile legal?",     a: "Da — AI-ul e antrenat pe legislația română actualizată 2025. Documentele sunt conforme, dar recomandăm validarea cu un avocat pentru situații complexe sau litigii." },
+  { q: "Ce se întâmplă când creditele se termină?",     a: "Poți face top-up oricând (10/30/100 credite, fără abonament) sau te abonezi la un plan lunar. Creditele top-up nu expiră niciodată." },
+  { q: "Datele mele sunt în siguranță?",               a: "Da — servere ISO 27001 în UE (Germania), criptare end-to-end, politici GDPR integrate. Poți exporta sau șterge contul oricând." },
+  { q: "Pot exporta documentele în Word și PDF?",       a: "Da — fiecare document generat poate fi descărcat instant în .docx și .pdf, cu header branded profesional și footer cu număr de pagină." },
+  { q: "Funcționează pe telefon?",                     a: "Da — interfața e complet responsivă: telefon, tabletă sau desktop, fără aplicație de instalat." },
+  { q: "Există un plan gratuit?",                      a: "Da — la înregistrare primești 10 credite gratuite (suficiente pentru 3 contracte sau 10 emailuri). Nu e nevoie de card." },
+];
+
+const STARTER_F = ["60 credite / lună", "Generator contracte (46 tipuri)", "Email-uri juridice", "5 analize PDF / lună", "Documente juridice HR", "Export PDF & Word", "Suport email 48h"];
+const PRO_F     = ["200 credite / lună", "Contracte nelimitate", "Email-uri nelimitate", "Analize PDF nelimitate + raport", "Doc. juridice nelimitate", "Clauze AI premium", "Export toate formatele", "Suport prioritar 4h"];
+
+// ─── componenta principală ────────────────────────────────────────────────────
 export default function LandingPage({ onEnterApp }) {
-  const [modal, setModal]       = useState(null);
-  const [toast, setToast]       = useState(null);
-  const [billing, setBilling]   = useState("lunar");
+  const [modal,    setModal]    = useState(null);
+  const [toast,    setToast]    = useState(null);
+  const [billing,  setBilling]  = useState("lunar");
   const [statsVis, setStatsVis] = useState(false);
   const [menuOpen, setMenuOpen] = useState(false);
+  const [faqOpen,  setFaqOpen]  = useState(null);
 
-  const statsRef    = useRef(null);
-  const featuresRef = useRef(null);
-  const stepsRef    = useRef(null);
-  const pricingRef  = useRef(null);
-  const testRef     = useRef(null);
-  const isMobile    = useIsMobile();
+  const statsRef   = useRef(null);
+  const stepsRef   = useRef(null);
+  const featRef    = useRef(null);
+  const compRef    = useRef(null);
+  const testRef    = useRef(null);
+  const pricingRef = useRef(null);
+  const faqRef     = useRef(null);
+  const isMobile   = useIsMobile();
 
-  // Animated counters (se declanșează la scroll)
   const c1 = useAnimatedCounter("12400", 1800, statsVis);
   const c2 = useAnimatedCounter("98",    1800, statsVis);
   const c3 = useAnimatedCounter("46",    1800, statsVis);
   const c4 = useAnimatedCounter("30",    1800, statsVis);
 
-  // IntersectionObserver pentru stats counter
   useEffect(() => {
     const obs = new IntersectionObserver(([e]) => { if (e.isIntersecting) setStatsVis(true); }, { threshold: 0.2 });
     if (statsRef.current) obs.observe(statsRef.current);
     return () => obs.disconnect();
   }, []);
 
-  // GSAP ScrollTrigger — animații la scroll
+  // ── GSAP ScrollTrigger ────────────────────────────────────────────────────
   useEffect(() => {
-    if (isMobile) return; // Skip pe mobile pentru perf
-
+    if (isMobile) return;
     const ctx = gsap.context(() => {
-      // Feature cards — stagger slide-up
-      gsap.from(".feature-card", {
-        scrollTrigger: { trigger: featuresRef.current, start: "top 80%" },
-        y: 60, opacity: 0, duration: 0.7, stagger: 0.1, ease: "power3.out",
-      });
-
-      // Steps — slide din stânga / dreapta alternant
       gsap.from(".step-card", {
-        scrollTrigger: { trigger: stepsRef.current, start: "top 80%" },
-        x: (i) => (i % 2 === 0 ? -60 : 60), opacity: 0, duration: 0.8, stagger: 0.15, ease: "power3.out",
+        scrollTrigger: { trigger: stepsRef.current,   start: "top 82%" },
+        y: 55, opacity: 0, duration: 0.75, stagger: 0.13, ease: "power3.out",
       });
-
-      // Pricing cards — scale + fade
+      gsap.from(".feature-card", {
+        scrollTrigger: { trigger: featRef.current,    start: "top 80%" },
+        y: 60, opacity: 0, duration: 0.7, stagger: 0.09, ease: "power3.out",
+      });
+      gsap.from(".comp-col", {
+        scrollTrigger: { trigger: compRef.current,   start: "top 82%" },
+        y: 45, opacity: 0, duration: 0.7, stagger: 0.14, ease: "power3.out",
+      });
+      gsap.from(".test-card", {
+        scrollTrigger: { trigger: testRef.current,   start: "top 85%" },
+        x: -45, opacity: 0, duration: 0.65, stagger: 0.12, ease: "power2.out",
+      });
       gsap.from(".pricing-card", {
         scrollTrigger: { trigger: pricingRef.current, start: "top 80%" },
-        scale: 0.9, opacity: 0, duration: 0.7, stagger: 0.15, ease: "back.out(1.4)",
+        scale: 0.9, opacity: 0, duration: 0.65, stagger: 0.15, ease: "back.out(1.4)",
       });
-
-      // Testimoniale — fade
-      gsap.from(".test-card", {
-        scrollTrigger: { trigger: testRef.current, start: "top 85%" },
-        y: 40, opacity: 0, duration: 0.6, stagger: 0.12, ease: "power2.out",
+      gsap.from(".faq-item", {
+        scrollTrigger: { trigger: faqRef.current,    start: "top 85%" },
+        y: 30, opacity: 0, duration: 0.5, stagger: 0.07, ease: "power2.out",
       });
-
-      // Stats cards
-      gsap.from(".stat-card", {
-        scrollTrigger: { trigger: statsRef.current, start: "top 85%" },
-        scale: 0.85, opacity: 0, duration: 0.6, stagger: 0.1, ease: "back.out(1.2)",
+      gsap.from(".stat-pill", {
+        scrollTrigger: { trigger: statsRef.current,  start: "top 88%" },
+        y: 25, opacity: 0, duration: 0.55, stagger: 0.1, ease: "power2.out",
       });
     });
-
     return () => ctx.revert();
   }, [isMobile]);
 
@@ -82,372 +156,470 @@ export default function LandingPage({ onEnterApp }) {
     document.getElementById(id)?.scrollIntoView({ behavior: "smooth" });
   };
 
-  const features = [
-    { icon: "📜", title: "Generator Contracte", desc: "46 tipuri conforme legislației române, generate instant cu AI.", color: "#818cf8", tag: "Nou: 46 tipuri" },
-    { icon: "📧", title: "Generator Email-uri",  desc: "Email-uri profesionale pe 5 tonuri, pentru orice situație business.", color: "#6ee7b7", tag: null },
-    { icon: "🔍", title: "Analizor Riscuri",     desc: "Upload PDF/DOCX și primești raport complet de riscuri în secunde.", color: "#f472b6", tag: "Popular" },
-    { icon: "📨", title: "Documente Juridice",  desc: "Notificări, somații, decizii HR, procuri și plângeri generate automat.", color: "#fbbf24", tag: "Nou" },
-    { icon: "✨", title: "Clauze AI Smart",      desc: "Asistentul AI sugerează clauze speciale adaptate situației tale.", color: "#a78bfa", tag: null },
-    { icon: "📕", title: "Export PDF & Word",    desc: "Exportă orice document profesional în format PDF sau Word (.docx).", color: "#34d399", tag: "Nou" },
-  ];
+  const mult = billing === "anual" ? 0.8 : 1;
 
-  const steps = [
-    { n: "01", icon: "📝", title: "Completezi formularul", desc: "Câteva câmpuri — tip document, datele părților, valoare. Sub 2 minute.", color: "#818cf8" },
-    { n: "02", icon: "⚡", title: "AI generează documentul", desc: "Claude Opus analizează legislația română în vigoare și redactează în juridic formal.", color: "#6ee7b7" },
-    { n: "03", icon: "📥", title: "Descărci și folosești",  desc: "Export direct în PDF sau Word. Gata de semnat sau de trimis la avocat pentru validare finală.", color: "#f472b6" },
-  ];
+  // ── helpers de stil ───────────────────────────────────────────────────────
+  const SEC = (bg) => ({
+    padding: isMobile ? "60px 20px" : "96px 6%",
+    position: "relative", zIndex: 1,
+    background: bg || "transparent",
+    overflow: "hidden",
+  });
 
-  const testimonials = [
-    { name: "Andreea M.", role: "CEO, Agenție Marketing", avatar: "👩‍💼", text: "Am economisit câteva mii de RON în avocați. Contractele sunt la fel de bune și le revizuiesc rapid cu avocatul meu înainte de semnat.", stars: 5 },
-    { name: "Radu C.",   role: "Fondator SaaS B2B",       avatar: "👨‍💻", text: "Analiza de riscuri pe PDF-uri a schimbat felul în care semnez contracte cu partenerii. Acum știu exact ce clauze să neg.", stars: 5 },
-    { name: "Mihaela T.", role: "Administrator SRL",      avatar: "👩‍💼", text: "Deciziile HR și notificările le generez în 3 minute. Înainte plăteam un consultant pe oră pentru asta.", stars: 5 },
-  ];
-
-  const starterF = [
-    [true,  "60 credite / lună"],
-    [true,  "Generator contracte (46 tipuri)"],
-    [true,  "Generator email-uri"],
-    [true,  "5 analize riscuri / lună"],
-    [true,  "Documente juridice (notificări, somații etc.)"],
-    [true,  "Export PDF & Word"],
-    [true,  "Suport email 48h"],
-    [false, "API acces"],
-    [false, "White-label"],
-  ];
-  const proF = [
-    [true,  "200 credite / lună"],
-    [true,  "Contracte nelimitate"],
-    [true,  "Email-uri nelimitate"],
-    [true,  "Analize nelimitate + export PDF raport"],
-    [true,  "Documente juridice nelimitate"],
-    [true,  "Clauze AI premium + GDPR"],
-    [true,  "Export PDF & Word toate formatele"],
-    [true,  "Suport prioritar 4h"],
-    [false, "White-label"],
-  ];
-
-  // ─── Styles shorthand ───────────────────────────────────────────────
-  const S = {
-    section: (bg) => ({
-      padding: isMobile ? "56px 20px" : "90px 5%",
-      position: "relative",
-      zIndex: 1,
-      background: bg || "transparent",
-    }),
-    h2: {
-      fontFamily: "'Syne',sans-serif",
-      fontWeight: 800,
-      fontSize: isMobile ? 26 : 42,
-      color: "#e2e8f0",
-      margin: "0 0 14px",
-      lineHeight: 1.15,
-    },
-    grad: {
-      background: "linear-gradient(135deg,#818cf8,#6ee7b7)",
-      WebkitBackgroundClip: "text",
-      WebkitTextFillColor: "transparent",
-    },
-    badge: (color) => ({
-      display: "inline-flex", alignItems: "center", gap: 5,
-      background: (color || "#818cf8") + "18",
-      border: "1px solid " + (color || "#818cf8") + "35",
-      borderRadius: 100, padding: "5px 13px",
-      color: color || "#818cf8",
-      fontSize: 11, fontWeight: 700, fontFamily: "'Syne',sans-serif",
-      marginBottom: 16,
-    }),
+  const H2 = {
+    fontFamily: "'Syne',sans-serif", fontWeight: 800,
+    fontSize: isMobile ? 27 : "clamp(30px,3.6vw,50px)",
+    color: "#e2e8f0", margin: "0 0 16px", lineHeight: 1.12,
   };
 
+  const GRAD_TXT = {
+    background: "linear-gradient(135deg,#818cf8 30%,#6ee7b7)",
+    WebkitBackgroundClip: "text", WebkitTextFillColor: "transparent",
+  };
+
+  const BADGE = (c = "#818cf8") => ({
+    display: "inline-block",
+    background: c + "18", border: `1px solid ${c}35`,
+    borderRadius: 100, padding: "5px 14px",
+    color: c, fontSize: 11, fontWeight: 700,
+    fontFamily: "'Syne',sans-serif", letterSpacing: "0.5px",
+    textTransform: "uppercase", marginBottom: 18,
+  });
+
+  const CARD_BASE = {
+    background: "linear-gradient(145deg,#0f1829,#080f1e)",
+    border: "1px solid #1e293b",
+    borderRadius: 16,
+  };
+
+  // ── render ────────────────────────────────────────────────────────────────
   return (
-    <div style={{ background: "#070d1a", minHeight: "100vh", fontFamily: "'DM Sans',sans-serif", color: "#e2e8f0", position: "relative", overflowX: "hidden" }}>
+    <div style={{ background: "#070d1a", minHeight: "100vh", fontFamily: "'DM Sans',sans-serif", color: "#e2e8f0", overflowX: "hidden", position: "relative" }}>
       {toast && <Toast msg={toast.msg} type={toast.type} onClose={() => setToast(null)} />}
       <Modal type={modal} onClose={() => setModal(null)} />
 
-      {/* ── NAV ─────────────────────────────────────────────────────── */}
-      <nav style={{ position: "fixed", top: 0, left: 0, right: 0, zIndex: 100, background: "rgba(7,13,26,.92)", backdropFilter: "blur(24px)", borderBottom: "1px solid #1e293b50", height: 62, display: "flex", alignItems: "center", justifyContent: "space-between", padding: "0 5%" }}>
+      {/* ── NAVBAR ─────────────────────────────────────────────────────── */}
+      <nav style={{
+        position: "fixed", top: 0, left: 0, right: 0, zIndex: 200,
+        height: 64, display: "flex", alignItems: "center", justifyContent: "space-between",
+        padding: isMobile ? "0 18px" : "0 6%",
+        background: "rgba(7,13,26,.88)", backdropFilter: "blur(20px)",
+        borderBottom: "1px solid rgba(255,255,255,.06)",
+      }}>
         <div style={{ display: "flex", alignItems: "center", gap: 8 }}>
           <span style={{ fontSize: 22 }}>⚖️</span>
-          <span style={{ fontFamily: "'Syne',sans-serif", fontWeight: 800, fontSize: 19, color: "#e2e8f0" }}>
-            Lex<span style={S.grad}>AI</span> Pro
+          <span style={{ fontFamily: "'Syne',sans-serif", fontWeight: 800, fontSize: 19 }}>
+            Lex<span style={GRAD_TXT}>AI</span> Pro
           </span>
         </div>
-        {isMobile ? (
-          <button onClick={() => setMenuOpen(o => !o)} style={{ background: "none", border: "none", color: "#94a3b8", fontSize: 24, cursor: "pointer", padding: 4 }}>{menuOpen ? "✕" : "☰"}</button>
-        ) : (
-          <div style={{ display: "flex", gap: 28, alignItems: "center" }}>
-            {[["Funcționalități", "features"], ["Cum funcționează", "steps"], ["Prețuri", "pricing"], ["Contact", null]].map(([label, id]) => (
-              <button key={label} onClick={() => id ? scrollTo(id) : setModal("contact")}
-                style={{ background: "none", border: "none", color: "#94a3b8", cursor: "pointer", fontFamily: "'DM Sans',sans-serif", fontSize: 14, padding: 0, transition: "color .15s" }}
-                onMouseEnter={e => e.target.style.color = "#e2e8f0"} onMouseLeave={e => e.target.style.color = "#94a3b8"}>{label}</button>
+
+        {!isMobile ? (
+          <div style={{ display: "flex", gap: 30, alignItems: "center" }}>
+            {[["Funcții","features"],["Cum funcționează","steps"],["Prețuri","pricing"],["Contact",null]].map(([lbl,id]) => (
+              <button key={lbl} onClick={() => id ? scrollTo(id) : setModal("contact")}
+                style={{ background:"none",border:"none",color:"#94a3b8",cursor:"pointer",fontSize:14,fontFamily:"'DM Sans',sans-serif",transition:"color .15s",padding:0 }}
+                onMouseEnter={e=>e.target.style.color="#e2e8f0"} onMouseLeave={e=>e.target.style.color="#94a3b8"}>
+                {lbl}
+              </button>
             ))}
-            <button onClick={onEnterApp} style={{ background: "linear-gradient(135deg,#818cf8,#6ee7b7)", border: "none", borderRadius: 11, padding: "10px 22px", color: "#070d1a", fontFamily: "'Syne',sans-serif", fontWeight: 700, fontSize: 14, cursor: "pointer" }}>
+            <button onClick={onEnterApp} style={{ background:"linear-gradient(135deg,#818cf8,#6ee7b7)",border:"none",borderRadius:10,padding:"9px 22px",color:"#070d1a",fontFamily:"'Syne',sans-serif",fontWeight:700,fontSize:14,cursor:"pointer" }}>
               Intră în App →
             </button>
           </div>
+        ) : (
+          <button onClick={() => setMenuOpen(o => !o)} style={{ background:"none",border:"none",color:"#94a3b8",fontSize:24,cursor:"pointer" }}>
+            {menuOpen ? "✕" : "☰"}
+          </button>
         )}
       </nav>
 
       {/* Mobile menu */}
       {isMobile && menuOpen && (
-        <div style={{ position: "fixed", top: 62, left: 0, right: 0, background: "#0a1220", borderBottom: "1px solid #1e293b", zIndex: 99, padding: "16px 20px", display: "flex", flexDirection: "column", gap: 4 }}>
-          {[["Funcționalități", "features"], ["Cum funcționează", "steps"], ["Prețuri", "pricing"], ["Contact", null]].map(([label, id]) => (
-            <button key={label} onClick={() => id ? scrollTo(id) : (setModal("contact"), setMenuOpen(false))}
-              style={{ background: "none", border: "none", color: "#94a3b8", cursor: "pointer", fontFamily: "'DM Sans',sans-serif", fontSize: 15, padding: "12px 0", textAlign: "left", borderBottom: "1px solid #1e293b40" }}>{label}</button>
+        <div style={{ position:"fixed",top:64,left:0,right:0,bottom:0,zIndex:190,background:"#070d1a",padding:"28px 24px",display:"flex",flexDirection:"column",gap:4 }}>
+          {[["Funcții","features"],["Cum funcționează","steps"],["Prețuri","pricing"],["Contact",null]].map(([lbl,id]) => (
+            <button key={lbl} onClick={() => id ? scrollTo(id) : (setModal("contact"),setMenuOpen(false))}
+              style={{ background:"none",border:"none",borderBottom:"1px solid #1e293b",color:"#e2e8f0",fontSize:18,fontFamily:"'Syne',sans-serif",fontWeight:700,cursor:"pointer",textAlign:"left",padding:"16px 0" }}>
+              {lbl}
+            </button>
           ))}
-          <button onClick={() => { setMenuOpen(false); onEnterApp(); }} style={{ background: "linear-gradient(135deg,#818cf8,#6ee7b7)", border: "none", borderRadius: 10, padding: 13, color: "#070d1a", fontFamily: "'Syne',sans-serif", fontWeight: 700, fontSize: 15, cursor: "pointer", marginTop: 8 }}>Intră în App →</button>
+          <button onClick={() => { setMenuOpen(false); onEnterApp(); }}
+            style={{ background:"linear-gradient(135deg,#818cf8,#6ee7b7)",border:"none",borderRadius:12,padding:16,color:"#070d1a",fontFamily:"'Syne',sans-serif",fontWeight:700,fontSize:16,cursor:"pointer",marginTop:16 }}>
+            🚀 Intră în App →
+          </button>
         </div>
       )}
 
-      {/* ── HERO ────────────────────────────────────────────────────── */}
-      <section style={{ minHeight: "100vh", display: "flex", flexDirection: "column", alignItems: "center", justifyContent: "center", textAlign: "center", padding: isMobile ? "110px 20px 70px" : "130px 5% 90px", position: "relative", overflow: "hidden" }}>
-        {/* Three.js background — lazy */}
+      {/* ── HERO ───────────────────────────────────────────────────────── */}
+      <section style={{ minHeight: "100vh", display:"flex", flexDirection:"column", alignItems:"center", justifyContent:"center", textAlign:"center", padding: isMobile ? "110px 20px 80px" : "120px 6% 100px", position:"relative", overflow:"hidden" }}>
         {!isMobile && (
           <Suspense fallback={null}>
             <HeroThree />
           </Suspense>
         )}
-        {/* Gradient overlay sub text */}
-        <div style={{ position: "absolute", inset: 0, background: "radial-gradient(ellipse 80% 60% at 50% 50%,#070d1a00 0%,#070d1a 85%)", pointerEvents: "none", zIndex: 1 }} />
 
-        <div style={{ position: "relative", zIndex: 2 }}>
-          <div style={{ display: "inline-flex", alignItems: "center", gap: 8, background: "#818cf815", border: "1px solid #818cf830", borderRadius: 100, padding: "8px 18px", marginBottom: 30, animation: "fadeUp .6s ease both" }}>
-            <span style={{ width: 7, height: 7, background: "#10b981", borderRadius: "50%", animation: "pulse 2s infinite", display: "inline-block" }} />
-            <span style={{ color: "#818cf8", fontSize: isMobile ? 11 : 13, fontWeight: 600 }}>Acum: 6 tipuri de documente juridice + export Word/PDF</span>
+        {/* Gradient radial overlay */}
+        <div style={{ position:"absolute",inset:0,background:"radial-gradient(ellipse 90% 70% at 50% 50%,rgba(7,13,26,0) 0%,#070d1a 78%)",zIndex:1,pointerEvents:"none" }} />
+
+        {/* Blob decorative stânga + dreapta */}
+        <div style={{ position:"absolute",top:"20%",left:"-10%",width:500,height:500,background:"radial-gradient(circle,#818cf810 0%,transparent 70%)",pointerEvents:"none",zIndex:1 }} />
+        <div style={{ position:"absolute",bottom:"10%",right:"-8%",width:400,height:400,background:"radial-gradient(circle,#6ee7b710 0%,transparent 70%)",pointerEvents:"none",zIndex:1 }} />
+
+        <div style={{ position:"relative",zIndex:2, maxWidth: 920 }}>
+          {/* Live badge */}
+          <div style={{ display:"inline-flex",alignItems:"center",gap:8,background:"#818cf812",border:"1px solid #818cf828",borderRadius:100,padding:"7px 18px",marginBottom:30,animation:"fadeUp .5s ease both" }}>
+            <span style={{ width:7,height:7,background:"#10b981",borderRadius:"50%",animation:"pulse 2s infinite",display:"inline-block",flexShrink:0 }} />
+            <span style={{ color:"#818cf8",fontSize:12,fontWeight:600 }}>AI antrenat pe legislația română · 46 tipuri de documente</span>
           </div>
 
-          <h1 style={{ fontSize: isMobile ? 34 : "clamp(42px,6vw,80px)", fontFamily: "'Syne',sans-serif", fontWeight: 800, letterSpacing: "-2px", lineHeight: 1.08, margin: "0 0 22px", animation: "fadeUp .7s ease .1s both", maxWidth: 820 }}>
-            Asistentul juridic<br />
-            al antreprenorului<br />
-            <span style={S.grad}>român</span>
+          <h1 style={{ fontSize: isMobile ? 36 : "clamp(48px,6.5vw,86px)", fontFamily:"'Syne',sans-serif", fontWeight:800, letterSpacing:"-2.5px", lineHeight:1.05, margin:"0 0 24px", animation:"fadeUp .7s ease .1s both" }}>
+            Documente juridice<br />
+            <span style={GRAD_TXT}>profesionale</span><br />
+            în 30 de secunde
           </h1>
 
-          <p style={{ color: "#94a3b8", fontSize: isMobile ? 15 : 18, maxWidth: 580, margin: "0 auto 38px", lineHeight: 1.75, animation: "fadeUp .7s ease .2s both" }}>
-            Contracte, emailuri, analize de riscuri și documente juridice — generate cu AI antrenat pe legislația românească, în secunde.
+          <p style={{ color:"#94a3b8", fontSize: isMobile ? 15 : 18, maxWidth:540, margin:"0 auto 38px", lineHeight:1.75, animation:"fadeUp .7s ease .2s both" }}>
+            Contracte, emailuri, somații și analize de riscuri — generate cu AI antrenat pe Codul Civil și legile române în vigoare, fără avocat scump.
           </p>
 
-          <div style={{ display: "flex", flexDirection: isMobile ? "column" : "row", gap: 12, justifyContent: "center", width: isMobile ? "100%" : "auto", maxWidth: isMobile ? 320 : "none", animation: "fadeUp .7s ease .3s both" }}>
-            <button onClick={onEnterApp}
-              style={{ background: "linear-gradient(135deg,#818cf8,#6ee7b7)", border: "none", borderRadius: 14, padding: "16px 34px", color: "#070d1a", fontFamily: "'Syne',sans-serif", fontWeight: 700, fontSize: 16, cursor: "pointer", boxShadow: "0 0 40px #818cf830" }}>
-              🚀 Începe Gratuit
+          <div style={{ display:"flex", flexDirection: isMobile ? "column" : "row", gap:12, justifyContent:"center", animation:"fadeUp .7s ease .3s both" }}>
+            <button onClick={onEnterApp} style={{ background:"linear-gradient(135deg,#818cf8,#6ee7b7)",border:"none",borderRadius:12,padding: isMobile ? "15px 28px" : "16px 36px",color:"#070d1a",fontFamily:"'Syne',sans-serif",fontWeight:700,fontSize:16,cursor:"pointer",boxShadow:"0 0 40px #818cf828" }}>
+              🚀 Începe Gratuit — 10 credite
             </button>
-            <button onClick={() => scrollTo("steps")}
-              style={{ background: "rgba(30,41,59,.8)", border: "1px solid #334155", borderRadius: 14, padding: "16px 34px", color: "#e2e8f0", fontFamily: "'Syne',sans-serif", fontWeight: 700, fontSize: 16, cursor: "pointer" }}>
+            <button onClick={() => scrollTo("steps")} style={{ background:"rgba(255,255,255,.05)",border:"1px solid rgba(255,255,255,.1)",borderRadius:12,padding: isMobile ? "15px 28px" : "16px 36px",color:"#e2e8f0",fontFamily:"'Syne',sans-serif",fontWeight:700,fontSize:16,cursor:"pointer" }}>
               Cum funcționează →
             </button>
           </div>
 
-          <div style={{ marginTop: 44, display: "flex", gap: 10, flexWrap: "wrap", justifyContent: "center", animation: "float 4s ease-in-out infinite" }}>
-            {["🔒 Date stocate UE", "⚡ < 30s generare", "📕 Export PDF & Word", "✅ Legislație RO 2025"].map(p => (
-              <span key={p} style={{ background: "#0f172a", border: "1px solid #1e293b", borderRadius: 100, padding: "6px 14px", fontSize: 12, color: "#94a3b8", whiteSpace: "nowrap" }}>{p}</span>
+          {/* Trust pills */}
+          <div style={{ marginTop:40, display:"flex", gap:8, flexWrap:"wrap", justifyContent:"center", animation:"fadeUp .7s ease .45s both" }}>
+            {["🔒 Date UE · GDPR", "⚡ Sub 30s", "📕 Export PDF & Word", "✅ Legislație 2025", "🇷🇴 Made in România"].map(p => (
+              <span key={p} style={{ background:"rgba(255,255,255,.04)",border:"1px solid rgba(255,255,255,.08)",borderRadius:100,padding:"6px 14px",fontSize:12,color:"#64748b",whiteSpace:"nowrap" }}>{p}</span>
             ))}
           </div>
         </div>
       </section>
 
-      {/* ── STATS ───────────────────────────────────────────────────── */}
-      <section ref={statsRef} style={S.section("#050b16")}>
-        <div style={{ display: "grid", gridTemplateColumns: isMobile ? "1fr 1fr" : "repeat(4,1fr)", gap: 14, maxWidth: 1000, margin: "0 auto" }}>
+      {/* ── STATS ──────────────────────────────────────────────────────── */}
+      <section ref={statsRef} style={{ ...SEC("#0a1220"), padding: isMobile ? "44px 20px" : "56px 6%", borderTop:"1px solid #1e293b", borderBottom:"1px solid #1e293b" }}>
+        <div style={{ maxWidth:960, margin:"0 auto", display:"grid", gridTemplateColumns: isMobile ? "1fr 1fr" : "repeat(4,1fr)", gap: isMobile ? 1 : 0 }}>
           {[
-            { v: c1, s: "+", l: "Documente generate" },
-            { v: c2, s: "%", l: "Satisfacție clienți" },
-            { v: c3, s: "",  l: "Tipuri de documente" },
-            { v: c4, s: "s", l: "Timp mediu generare", prefix: "< " },
-          ].map((x, i) => (
-            <div key={i} className="stat-card" style={{ textAlign: "center", padding: isMobile ? "20px 14px" : 28, background: "#0f172a", border: "1px solid #1e293b", borderRadius: 18 }}>
-              <div style={{ fontSize: isMobile ? 30 : 46, fontFamily: "'Syne',sans-serif", fontWeight: 800, ...S.grad, lineHeight: 1 }}>
-                {x.prefix || ""}{typeof x.v === "number" ? x.v.toLocaleString("ro-RO") : x.v}{x.s}
+            { v:c1, suf:"+",  lbl:"Documente generate" },
+            { v:c2, suf:"%",  lbl:"Satisfacție clienți" },
+            { v:c3, suf:"+",  lbl:"Tipuri de contracte" },
+            { v:c4, suf:"s",  lbl:"Timp mediu generare", pre:"< " },
+          ].map(({ v, suf, lbl, pre }, i) => (
+            <div key={lbl} className="stat-pill" style={{ textAlign:"center", padding: isMobile ? "20px 12px" : "10px 24px", borderRight: !isMobile && i<3 ? "1px solid #1e293b" : "none", borderBottom: isMobile && i<2 ? "1px solid #1e293b" : "none" }}>
+              <div style={{ fontFamily:"'Syne',sans-serif", fontWeight:800, fontSize: isMobile ? 36 : 52, lineHeight:1, ...GRAD_TXT }}>
+                {pre||""}{typeof v === "number" ? v.toLocaleString("ro-RO") : v}{suf}
               </div>
-              <div style={{ color: "#64748b", fontSize: isMobile ? 11 : 13, marginTop: 8, lineHeight: 1.4 }}>{x.l}</div>
+              <div style={{ color:"#475569", fontSize:13, marginTop:8 }}>{lbl}</div>
             </div>
           ))}
         </div>
       </section>
 
-      {/* ── CUM FUNCȚIONEAZĂ ────────────────────────────────────────── */}
-      <section id="steps" ref={stepsRef} style={S.section()}>
-        <div style={{ textAlign: "center", marginBottom: isMobile ? 36 : 52 }}>
-          <div style={S.badge()}>⚡ Simplu și rapid</div>
-          <h2 style={S.h2}>Trei pași până la<br /><span style={S.grad}>documentul tău juridic</span></h2>
-        </div>
-        <div style={{ display: "grid", gridTemplateColumns: isMobile ? "1fr" : "repeat(3,1fr)", gap: 20, maxWidth: 960, margin: "0 auto" }}>
-          {steps.map((step, i) => (
-            <div key={i} className="step-card" style={{ background: "#0f172a", border: "1px solid #1e293b", borderRadius: 20, padding: isMobile ? 22 : 30, position: "relative", overflow: "hidden" }}>
-              <div style={{ position: "absolute", top: 0, left: 0, right: 0, height: 3, background: `linear-gradient(90deg,${step.color},${step.color}00)` }} />
-              <div style={{ fontFamily: "'Syne',sans-serif", fontWeight: 800, fontSize: 48, color: step.color + "20", lineHeight: 1, marginBottom: 12 }}>{step.n}</div>
-              <div style={{ fontSize: 32, marginBottom: 14 }}>{step.icon}</div>
-              <h3 style={{ fontFamily: "'Syne',sans-serif", fontWeight: 700, fontSize: 17, color: "#e2e8f0", margin: "0 0 10px" }}>{step.title}</h3>
-              <p style={{ color: "#64748b", fontSize: 13, lineHeight: 1.7, margin: 0 }}>{step.desc}</p>
-            </div>
-          ))}
-        </div>
-      </section>
+      {/* ── CUM FUNCȚIONEAZĂ ───────────────────────────────────────────── */}
+      <section id="steps" ref={stepsRef} style={SEC()}>
+        {/* blob decorativ */}
+        <div style={{ position:"absolute",top:"-10%",right:"5%",width:350,height:350,background:"radial-gradient(circle,#818cf808 0%,transparent 70%)",pointerEvents:"none" }} />
+        <div style={{ maxWidth:1100, margin:"0 auto" }}>
+          <div style={{ textAlign:"center", marginBottom: isMobile ? 36 : 56 }}>
+            <span style={BADGE()}>⚡ Simplu și rapid</span>
+            <h2 style={H2}>Patru pași până la<br /><span style={GRAD_TXT}>documentul tău juridic</span></h2>
+            <p style={{ color:"#475569", fontSize:15, maxWidth:440, margin:"0 auto" }}>Nicio cunoștință juridică necesară.</p>
+          </div>
 
-      {/* ── FEATURES ────────────────────────────────────────────────── */}
-      <section id="features" ref={featuresRef} style={S.section("#050b16")}>
-        <div style={{ textAlign: "center", marginBottom: isMobile ? 36 : 52 }}>
-          <div style={S.badge("#6ee7b7")}>🛠️ Funcționalități</div>
-          <h2 style={S.h2}>Tot ce ai nevoie pentru<br /><span style={S.grad}>business-ul tău</span></h2>
-          <p style={{ color: "#64748b", fontSize: 16, maxWidth: 480, margin: "0 auto" }}>Instrumente AI specializate pe legislația românească în vigoare.</p>
-        </div>
-        <div style={{ display: "grid", gridTemplateColumns: isMobile ? "1fr" : "repeat(auto-fill,minmax(300px,1fr))", gap: 16, maxWidth: 1060, margin: "0 auto" }}>
-          {features.map((f, i) => (
-            <div key={i} className="feature-card" style={{ background: "#0f172a", border: "1px solid #1e293b", borderRadius: 18, padding: isMobile ? 20 : 28, position: "relative", overflow: "hidden", transition: "border-color .2s, transform .2s" }}
-              onMouseEnter={e => { e.currentTarget.style.borderColor = f.color + "60"; e.currentTarget.style.transform = "translateY(-3px)"; }}
-              onMouseLeave={e => { e.currentTarget.style.borderColor = "#1e293b"; e.currentTarget.style.transform = "translateY(0)"; }}>
-              <div style={{ position: "absolute", top: -20, right: -20, width: 100, height: 100, background: `radial-gradient(circle,${f.color}15 0%,transparent 70%)`, pointerEvents: "none" }} />
-              <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", marginBottom: 14 }}>
-                <span style={{ fontSize: 30 }}>{f.icon}</span>
-                {f.tag && <span style={{ background: f.color + "18", color: f.color, border: `1px solid ${f.color}30`, fontSize: 10, fontWeight: 700, padding: "2px 9px", borderRadius: 100, fontFamily: "'Syne',sans-serif" }}>{f.tag}</span>}
+          <div style={{ display:"grid", gridTemplateColumns: isMobile ? "1fr" : "repeat(4,1fr)", gap:16, position:"relative" }}>
+            {STEPS.map((s, i) => (
+              <div key={s.n} className="step-card" style={{ ...CARD_BASE, padding: isMobile ? 22 : 28, position:"relative", overflow:"hidden", transition:"border-color .2s, transform .2s" }}
+                onMouseEnter={e=>{ e.currentTarget.style.borderColor=s.color+"50"; e.currentTarget.style.transform="translateY(-4px)"; }}
+                onMouseLeave={e=>{ e.currentTarget.style.borderColor="#1e293b"; e.currentTarget.style.transform="translateY(0)"; }}>
+                {/* top color bar */}
+                <div style={{ position:"absolute",top:0,left:0,right:0,height:3,background:`linear-gradient(90deg,${s.color},${s.color}00)` }} />
+                {/* number watermark */}
+                <div style={{ fontFamily:"'Syne',sans-serif",fontWeight:800,fontSize:58,lineHeight:1,color:s.color+"14",position:"absolute",top:10,right:14,userSelect:"none" }}>{s.n}</div>
+                <div style={{ fontSize:30, marginBottom:14 }}>{s.icon}</div>
+                <h3 style={{ fontFamily:"'Syne',sans-serif",fontWeight:700,fontSize:15,color:"#e2e8f0",margin:"0 0 10px",lineHeight:1.3 }}>{s.title}</h3>
+                <p style={{ color:"#475569",fontSize:13,lineHeight:1.65,margin:0 }}>{s.desc}</p>
+                {!isMobile && i < STEPS.length-1 && (
+                  <div style={{ position:"absolute",right:-10,top:"50%",transform:"translateY(-50%)",color:"#334155",fontSize:20,zIndex:2,fontWeight:300 }}>›</div>
+                )}
               </div>
-              <h3 style={{ fontFamily: "'Syne',sans-serif", fontWeight: 700, fontSize: 16, color: "#e2e8f0", margin: "0 0 8px" }}>{f.title}</h3>
-              <p style={{ color: "#64748b", fontSize: 13, lineHeight: 1.7, margin: 0 }}>{f.desc}</p>
-            </div>
-          ))}
-        </div>
-      </section>
-
-      {/* ── TESTIMONIALE ────────────────────────────────────────────── */}
-      <section ref={testRef} style={S.section()}>
-        <div style={{ textAlign: "center", marginBottom: isMobile ? 36 : 48 }}>
-          <div style={S.badge("#f472b6")}>⭐ Testimoniale</div>
-          <h2 style={S.h2}>Ce spun <span style={S.grad}>clienții noștri</span></h2>
-        </div>
-        <div style={{ display: "grid", gridTemplateColumns: isMobile ? "1fr" : "repeat(3,1fr)", gap: 16, maxWidth: 960, margin: "0 auto" }}>
-          {testimonials.map((t, i) => (
-            <div key={i} className="test-card" style={{ background: "#0f172a", border: "1px solid #1e293b", borderRadius: 18, padding: isMobile ? 20 : 26 }}>
-              <div style={{ display: "flex", gap: 2, marginBottom: 14 }}>
-                {"★".repeat(t.stars).split("").map((s, j) => <span key={j} style={{ color: "#fbbf24", fontSize: 14 }}>{s}</span>)}
-              </div>
-              <p style={{ color: "#94a3b8", fontSize: 14, lineHeight: 1.75, margin: "0 0 20px", fontStyle: "italic" }}>"{t.text}"</p>
-              <div style={{ display: "flex", alignItems: "center", gap: 12 }}>
-                <div style={{ width: 40, height: 40, background: "#1e293b", borderRadius: "50%", display: "flex", alignItems: "center", justifyContent: "center", fontSize: 20, flexShrink: 0 }}>{t.avatar}</div>
-                <div>
-                  <div style={{ fontFamily: "'Syne',sans-serif", fontWeight: 700, fontSize: 14, color: "#e2e8f0" }}>{t.name}</div>
-                  <div style={{ color: "#475569", fontSize: 12 }}>{t.role}</div>
-                </div>
-              </div>
-            </div>
-          ))}
-        </div>
-      </section>
-
-      {/* ── PRICING ─────────────────────────────────────────────────── */}
-      <section id="pricing" ref={pricingRef} style={S.section("#050b16")}>
-        <div style={{ textAlign: "center", marginBottom: 42 }}>
-          <div style={S.badge("#fbbf24")}>💳 Prețuri</div>
-          <h2 style={S.h2}>Prețuri <span style={S.grad}>transparente</span></h2>
-          <div style={{ display: "inline-flex", alignItems: "center", background: "#0f172a", border: "1px solid #1e293b", borderRadius: 100, padding: "5px 6px", marginTop: 16 }}>
-            {[["lunar", "Lunar"], ["anual", "Anual −20%"]].map(([val, lbl]) => (
-              <button key={val} onClick={() => setBilling(val)}
-                style={{ background: billing === val ? "linear-gradient(135deg,#818cf8,#6ee7b7)" : "none", border: "none", borderRadius: 100, padding: "8px 20px", color: billing === val ? "#070d1a" : "#94a3b8", fontFamily: "'Syne',sans-serif", fontWeight: 700, fontSize: 13, cursor: "pointer", whiteSpace: "nowrap", transition: "all .2s" }}>{lbl}</button>
             ))}
           </div>
         </div>
+      </section>
 
-        <div style={{ display: "grid", gridTemplateColumns: isMobile ? "1fr" : "repeat(auto-fit,minmax(300px,1fr))", gap: 20, maxWidth: 860, margin: "0 auto 28px" }}>
-          {/* Starter */}
-          <div className="pricing-card" style={{ background: "#0f172a", border: "1px solid #1e293b", borderRadius: 20, padding: isMobile ? 24 : 34 }}>
-            <div style={{ display: "flex", alignItems: "center", gap: 10, marginBottom: 8 }}>
-              <span style={{ fontSize: 24 }}>🚀</span>
-              <span style={{ fontFamily: "'Syne',sans-serif", fontWeight: 800, fontSize: 20, color: "#e2e8f0" }}>Starter</span>
-            </div>
-            <div style={{ marginBottom: 24 }}>
-              <span style={{ fontFamily: "'Syne',sans-serif", fontWeight: 800, fontSize: 42, color: "#6ee7b7" }}>{billing === "lunar" ? "49" : "39"}</span>
-              <span style={{ color: "#64748b" }}> RON/lună</span>
-              {billing === "anual" && <div style={{ color: "#10b981", fontSize: 12, marginTop: 4 }}>Economisești 120 RON/an</div>}
-            </div>
-            <div style={{ display: "flex", flexDirection: "column", gap: 10, marginBottom: 26 }}>
-              {starterF.map(([ok, txt], i) => (
-                <div key={i} style={{ display: "flex", alignItems: "flex-start", gap: 10, fontSize: 13, color: ok ? "#94a3b8" : "#334155" }}>
-                  <span style={{ color: ok ? "#6ee7b7" : "#334155", flexShrink: 0, fontWeight: 700 }}>{ok ? "✓" : "✗"}</span>{txt}
+      {/* ── FEATURES ───────────────────────────────────────────────────── */}
+      <section id="features" ref={featRef} style={SEC("#050c16")}>
+        <div style={{ position:"absolute",bottom:"5%",left:"3%",width:300,height:300,background:"radial-gradient(circle,#6ee7b708 0%,transparent 70%)",pointerEvents:"none" }} />
+        <div style={{ maxWidth:1100, margin:"0 auto" }}>
+          <div style={{ textAlign:"center", marginBottom: isMobile ? 36 : 52 }}>
+            <span style={BADGE("#6ee7b7")}>🛠️ Funcționalități</span>
+            <h2 style={H2}>Tot ce ai nevoie<br /><span style={GRAD_TXT}>într-un singur loc</span></h2>
+            <p style={{ color:"#475569",fontSize:15,maxWidth:440,margin:"0 auto" }}>Instrumente AI specializate pe legislația română în vigoare.</p>
+          </div>
+
+          <div style={{ display:"grid", gridTemplateColumns: isMobile ? "1fr" : "repeat(3,1fr)", gap:18 }}>
+            {FEATURES.map(f => (
+              <div key={f.title} className="feature-card" style={{ ...CARD_BASE, padding: isMobile ? 22 : 28, position:"relative", overflow:"hidden", transition:"border-color .2s, transform .2s" }}
+                onMouseEnter={e=>{ e.currentTarget.style.borderColor=f.color+"55"; e.currentTarget.style.transform="translateY(-4px)"; }}
+                onMouseLeave={e=>{ e.currentTarget.style.borderColor="#1e293b"; e.currentTarget.style.transform="translateY(0)"; }}>
+                {/* radial glow */}
+                <div style={{ position:"absolute",top:-30,right:-30,width:120,height:120,background:`radial-gradient(circle,${f.color}12 0%,transparent 70%)`,pointerEvents:"none" }} />
+                {/* tag */}
+                {f.tag && (
+                  <div style={{ position:"absolute",top:16,right:16,background:f.color+"18",color:f.color,fontSize:10,fontWeight:700,padding:"3px 10px",borderRadius:100,border:`1px solid ${f.color}35`,fontFamily:"'Syne',sans-serif",letterSpacing:"0.5px",textTransform:"uppercase" }}>{f.tag}</div>
+                )}
+                <div style={{ width:48,height:48,background:f.color+"18",borderRadius:14,display:"flex",alignItems:"center",justifyContent:"center",fontSize:22,marginBottom:18,border:`1px solid ${f.color}25` }}>{f.icon}</div>
+                <h3 style={{ fontFamily:"'Syne',sans-serif",fontWeight:700,fontSize:16,color:"#e2e8f0",margin:"0 0 10px" }}>{f.title}</h3>
+                <p style={{ color:"#475569",fontSize:13,lineHeight:1.65,margin:0 }}>{f.desc}</p>
+              </div>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* ── COMPARAȚIE ─────────────────────────────────────────────────── */}
+      <section ref={compRef} style={SEC()}>
+        <div style={{ maxWidth:920, margin:"0 auto" }}>
+          <div style={{ textAlign:"center", marginBottom: isMobile ? 36 : 52 }}>
+            <span style={BADGE("#f59e0b")}>⚖️ Comparație</span>
+            <h2 style={H2}>De ce <span style={GRAD_TXT}>LexAI Pro</span>?</h2>
+            <p style={{ color:"#475569",fontSize:15,maxWidth:400,margin:"0 auto" }}>Compară costul, viteza și calitatea față de alternativele tradiționale.</p>
+          </div>
+
+          <div style={{ display:"grid", gridTemplateColumns: isMobile ? "1fr" : "1fr 1fr 1.15fr", gap:16 }}>
+            {COMPARISON.map(col => (
+              <div key={col.label} className="comp-col" style={{
+                background: col.highlight ? "linear-gradient(165deg,#161f38,#0d1527)" : "#0a1220",
+                border: `${col.highlight ? 2 : 1}px solid ${col.highlight ? "#818cf840" : "#1e293b"}`,
+                borderRadius:16, padding: isMobile ? 22 : 28, position:"relative", overflow:"hidden",
+              }}>
+                {col.highlight && <div style={{ position:"absolute",top:0,left:0,right:0,height:3,background:"linear-gradient(90deg,#818cf8,#6ee7b7)" }} />}
+                {col.highlight && <div style={{ position:"absolute",top:14,right:14,background:"linear-gradient(135deg,#818cf8,#6ee7b7)",color:"#070d1a",fontSize:9,fontWeight:700,padding:"3px 10px",borderRadius:100,fontFamily:"'Syne',sans-serif",letterSpacing:"0.5px",textTransform:"uppercase" }}>Recomandat</div>}
+                <div style={{ fontFamily:"'Syne',sans-serif",fontWeight:800,fontSize:16,color:col.color,marginBottom:20 }}>{col.label}</div>
+                <div style={{ display:"flex",flexDirection:"column",gap:11 }}>
+                  {col.rows.map(([txt, ok]) => (
+                    <div key={txt} style={{ fontSize:13,color: ok ? "#94a3b8" : "#374151",display:"flex",gap:6,alignItems:"flex-start",lineHeight:1.45 }}>{txt}</div>
+                  ))}
                 </div>
+                {col.highlight && (
+                  <button onClick={onEnterApp} style={{ marginTop:24,width:"100%",background:"linear-gradient(135deg,#818cf8,#6ee7b7)",border:"none",borderRadius:10,padding:"12px 0",color:"#070d1a",fontFamily:"'Syne',sans-serif",fontWeight:700,fontSize:14,cursor:"pointer" }}>
+                    Încearcă gratuit →
+                  </button>
+                )}
+              </div>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* ── CALITATE ───────────────────────────────────────────────────── */}
+      <section style={{ ...SEC("#050c16"), textAlign:"center" }}>
+        <div style={{ maxWidth:820, margin:"0 auto" }}>
+          <span style={BADGE("#a78bfa")}>🏆 Calitate</span>
+          <h2 style={{ ...H2, textAlign:"center", marginBottom:44 }}>Cei 5 piloni ai<br /><span style={GRAD_TXT}>platformei LexAI Pro</span></h2>
+          <div style={{ display:"flex", flexWrap:"wrap", gap:14, justifyContent:"center" }}>
+            {QUALITY.map((q, i) => (
+              <div key={q.label} style={{ background:`${q.color}12`,border:`1px solid ${q.color}30`,borderRadius:100,padding: isMobile ? "13px 20px" : "15px 26px",display:"flex",alignItems:"center",gap:10,animation:`fadeUp .6s ease ${i*0.1}s both` }}>
+                <span style={{ fontSize:20 }}>{q.icon}</span>
+                <span style={{ fontFamily:"'Syne',sans-serif",fontWeight:700,fontSize:14,color:q.color }}>{q.label}</span>
+              </div>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* ── TESTIMONIALE ───────────────────────────────────────────────── */}
+      <section ref={testRef} style={SEC()}>
+        <div style={{ maxWidth:1000, margin:"0 auto" }}>
+          <div style={{ textAlign:"center", marginBottom: isMobile ? 36 : 48 }}>
+            <span style={BADGE("#f472b6")}>⭐ Testimoniale</span>
+            <h2 style={H2}>Ce spun antreprenorii<br /><span style={GRAD_TXT}>care folosesc LexAI Pro</span></h2>
+          </div>
+          <div style={{ display:"grid", gridTemplateColumns: isMobile ? "1fr" : "repeat(3,1fr)", gap:18 }}>
+            {TESTIMONIALS.map(t => (
+              <div key={t.name} className="test-card" style={{ ...CARD_BASE, padding: isMobile ? 22 : 26 }}>
+                <div style={{ color:"#f59e0b",fontSize:16,marginBottom:14,letterSpacing:2 }}>{"★".repeat(t.stars)}</div>
+                <p style={{ color:"#94a3b8",fontSize:14,lineHeight:1.75,margin:"0 0 22px",fontStyle:"italic" }}>{t.text}</p>
+                <div style={{ display:"flex",alignItems:"center",gap:12, borderTop:"1px solid #1e293b", paddingTop:18 }}>
+                  <div style={{ width:38,height:38,background:"linear-gradient(135deg,#818cf8,#6ee7b7)",borderRadius:"50%",display:"flex",alignItems:"center",justifyContent:"center",fontFamily:"'Syne',sans-serif",fontWeight:700,fontSize:12,color:"#070d1a",flexShrink:0 }}>{t.initials}</div>
+                  <div>
+                    <div style={{ fontFamily:"'Syne',sans-serif",fontWeight:700,fontSize:14,color:"#e2e8f0" }}>{t.name}</div>
+                    <div style={{ color:"#475569",fontSize:12 }}>{t.role}</div>
+                  </div>
+                </div>
+              </div>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* ── PRICING ────────────────────────────────────────────────────── */}
+      <section id="pricing" ref={pricingRef} style={SEC("#050c16")}>
+        <div style={{ maxWidth:880, margin:"0 auto" }}>
+          <div style={{ textAlign:"center", marginBottom: isMobile ? 32 : 44 }}>
+            <span style={BADGE("#fbbf24")}>💳 Prețuri</span>
+            <h2 style={H2}>Transparent.<br /><span style={GRAD_TXT}>Fără surprize.</span></h2>
+            {/* Billing toggle */}
+            <div style={{ display:"inline-flex",background:"#0f172a",border:"1px solid #1e293b",borderRadius:100,padding:"4px 5px",gap:2,marginTop:20 }}>
+              {[["lunar","Lunar"],["anual","Anual −20%"]].map(([v,lbl]) => (
+                <button key={v} onClick={() => setBilling(v)} style={{ background: billing===v ? "linear-gradient(135deg,#818cf8,#6ee7b7)" : "none",border:"none",borderRadius:100,padding:"8px 22px",color: billing===v ? "#070d1a" : "#64748b",fontFamily:"'Syne',sans-serif",fontWeight:700,fontSize:13,cursor:"pointer",whiteSpace:"nowrap",transition:"all .2s" }}>{lbl}</button>
               ))}
             </div>
-            <button onClick={onEnterApp} style={{ width: "100%", background: "#1e293b", border: "1px solid #334155", borderRadius: 12, padding: 14, color: "#6ee7b7", fontFamily: "'Syne',sans-serif", fontWeight: 700, fontSize: 14, cursor: "pointer" }}>
-              Începe Gratuit 14 Zile
+          </div>
+
+          <div style={{ display:"grid", gridTemplateColumns: isMobile ? "1fr" : "1fr 1fr 1fr", gap:18 }}>
+            {/* Trial */}
+            <div className="pricing-card" style={{ ...CARD_BASE, padding: isMobile ? 24 : 30 }}>
+              <div style={{ fontFamily:"'Syne',sans-serif",fontWeight:800,fontSize:18,color:"#6ee7b7",marginBottom:6 }}>Trial Gratuit</div>
+              <div style={{ fontFamily:"'Syne',sans-serif",fontWeight:800,fontSize:42,color:"#e2e8f0",lineHeight:1,marginBottom:4 }}>0 <span style={{ fontSize:15,color:"#475569",fontWeight:400 }}>RON</span></div>
+              <div style={{ color:"#475569",fontSize:13,marginBottom:22 }}>10 credite la înregistrare</div>
+              <div style={{ display:"flex",flexDirection:"column",gap:9,marginBottom:26 }}>
+                {["10 credite gratuite (fără card)","Generator contracte","Email-uri juridice","1 analiză PDF","Export PDF & Word"].map(f => (
+                  <div key={f} style={{ display:"flex",gap:8,alignItems:"flex-start",fontSize:13,color:"#94a3b8" }}>
+                    <span style={{ color:"#6ee7b7",flexShrink:0,marginTop:1,fontWeight:700 }}>✓</span>{f}
+                  </div>
+                ))}
+              </div>
+              <button onClick={onEnterApp} style={{ width:"100%",background:"#1e293b",border:"1px solid #334155",borderRadius:10,padding:"13px 0",color:"#6ee7b7",fontFamily:"'Syne',sans-serif",fontWeight:700,fontSize:14,cursor:"pointer" }}>
+                Încearcă Gratuit
+              </button>
+            </div>
+
+            {/* Starter */}
+            <div className="pricing-card" style={{ ...CARD_BASE, border:"1px solid #6ee7b730", padding: isMobile ? 24 : 30 }}>
+              <div style={{ fontFamily:"'Syne',sans-serif",fontWeight:800,fontSize:18,color:"#6ee7b7",marginBottom:6 }}>Starter</div>
+              <div style={{ fontFamily:"'Syne',sans-serif",fontWeight:800,fontSize:42,color:"#e2e8f0",lineHeight:1,marginBottom:4 }}>
+                {Math.round(49*mult)} <span style={{ fontSize:15,color:"#475569",fontWeight:400 }}>RON/lună</span>
+              </div>
+              <div style={{ color:"#475569",fontSize:13,marginBottom:22 }}>60 credite / lună</div>
+              <div style={{ display:"flex",flexDirection:"column",gap:9,marginBottom:26 }}>
+                {STARTER_F.map(f => (
+                  <div key={f} style={{ display:"flex",gap:8,alignItems:"flex-start",fontSize:13,color:"#94a3b8" }}>
+                    <span style={{ color:"#6ee7b7",flexShrink:0,marginTop:1,fontWeight:700 }}>✓</span>{f}
+                  </div>
+                ))}
+              </div>
+              <button onClick={onEnterApp} style={{ width:"100%",background:"#1e293b",border:"1px solid #6ee7b740",borderRadius:10,padding:"13px 0",color:"#6ee7b7",fontFamily:"'Syne',sans-serif",fontWeight:700,fontSize:14,cursor:"pointer" }}>
+                Alege Starter
+              </button>
+            </div>
+
+            {/* Pro */}
+            <div className="pricing-card" style={{ background:"linear-gradient(165deg,#161f38,#0d1527)",border:"2px solid #818cf840",borderRadius:16,padding: isMobile ? 24 : 30,position:"relative",overflow:"hidden",boxShadow:"0 0 60px #818cf812" }}>
+              <div style={{ position:"absolute",top:0,left:0,right:0,height:3,background:"linear-gradient(90deg,#818cf8,#6ee7b7)" }} />
+              <div style={{ position:"absolute",top:14,right:14,background:"linear-gradient(135deg,#818cf8,#6ee7b7)",color:"#070d1a",fontSize:9,fontWeight:700,padding:"3px 10px",borderRadius:100,fontFamily:"'Syne',sans-serif",letterSpacing:"0.5px",textTransform:"uppercase" }}>Popular</div>
+              <div style={{ fontFamily:"'Syne',sans-serif",fontWeight:800,fontSize:18,color:"#818cf8",marginBottom:6 }}>Pro Business</div>
+              <div style={{ fontFamily:"'Syne',sans-serif",fontWeight:800,fontSize:42,color:"#e2e8f0",lineHeight:1,marginBottom:4 }}>
+                {Math.round(149*mult)} <span style={{ fontSize:15,color:"#475569",fontWeight:400 }}>RON/lună</span>
+              </div>
+              <div style={{ color:"#475569",fontSize:13,marginBottom:22 }}>200 credite / lună</div>
+              <div style={{ display:"flex",flexDirection:"column",gap:9,marginBottom:26 }}>
+                {PRO_F.map(f => (
+                  <div key={f} style={{ display:"flex",gap:8,alignItems:"flex-start",fontSize:13,color:"#94a3b8" }}>
+                    <span style={{ color:"#818cf8",flexShrink:0,marginTop:1,fontWeight:700 }}>✓</span>{f}
+                  </div>
+                ))}
+              </div>
+              <button onClick={onEnterApp} style={{ width:"100%",background:"linear-gradient(135deg,#818cf8,#6ee7b7)",border:"none",borderRadius:10,padding:"14px 0",color:"#070d1a",fontFamily:"'Syne',sans-serif",fontWeight:700,fontSize:14,cursor:"pointer" }}>
+                Alege Pro Business →
+              </button>
+            </div>
+          </div>
+
+          <p style={{ textAlign:"center",color:"#334155",fontSize:13,marginTop:22 }}>
+            ✓ Fără card de credit la trial · ✓ Anulezi oricând · ✓ Facturare în RON + TVA<br />
+            <span style={{ color:"#2d3748" }}>Preferi top-up? 10 cr = 9 RON · 30 cr = 24 RON · 100 cr = 69 RON — nu expiră.</span>
+          </p>
+        </div>
+      </section>
+
+      {/* ── FAQ ────────────────────────────────────────────────────────── */}
+      <section ref={faqRef} style={SEC()}>
+        <div style={{ maxWidth:720, margin:"0 auto" }}>
+          <div style={{ textAlign:"center", marginBottom: isMobile ? 36 : 48 }}>
+            <span style={BADGE("#f472b6")}>❓ FAQ</span>
+            <h2 style={H2}>Întrebări frecvente</h2>
+          </div>
+          <div style={{ display:"flex",flexDirection:"column",gap:10 }}>
+            {FAQS.map((item, i) => (
+              <div key={i} className="faq-item" style={{ ...CARD_BASE, overflow:"hidden", border:`1px solid ${faqOpen===i ? "#818cf840" : "#1e293b"}`, transition:"border-color .2s" }}>
+                <button onClick={() => setFaqOpen(faqOpen===i ? null : i)} style={{ width:"100%",background:"none",border:"none",padding:"18px 22px",display:"flex",justifyContent:"space-between",alignItems:"center",cursor:"pointer",textAlign:"left",gap:16 }}>
+                  <span style={{ fontFamily:"'Syne',sans-serif",fontWeight:700,fontSize:14,color:"#e2e8f0",lineHeight:1.4 }}>{item.q}</span>
+                  <span style={{ color:"#818cf8",fontSize:22,fontWeight:200,flexShrink:0,display:"inline-block",transform: faqOpen===i ? "rotate(45deg)" : "rotate(0deg)",transition:"transform .25s" }}>+</span>
+                </button>
+                {faqOpen===i && (
+                  <div style={{ padding:"0 22px 20px",color:"#64748b",fontSize:14,lineHeight:1.75 }}>{item.a}</div>
+                )}
+              </div>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* ── CTA FINAL ──────────────────────────────────────────────────── */}
+      <section style={{ ...SEC("#050c16"), textAlign:"center" }}>
+        <div style={{ maxWidth:680, margin:"0 auto" }}>
+          <div style={{ background:"linear-gradient(165deg,#0f1829,#080f1e)",border:"1px solid #818cf828",borderRadius:22,padding: isMobile ? "44px 24px" : "64px 52px",position:"relative",overflow:"hidden" }}>
+            <div style={{ position:"absolute",top:0,left:"50%",transform:"translateX(-50%)",width:"70%",height:1,background:"linear-gradient(90deg,transparent,#818cf8,transparent)" }} />
+            <div style={{ position:"absolute",bottom:"-20%",right:"-10%",width:300,height:300,background:"radial-gradient(circle,#818cf810 0%,transparent 70%)",pointerEvents:"none" }} />
+            <div style={{ fontSize:44,marginBottom:20 }}>⚖️</div>
+            <h2 style={{ ...H2, marginBottom:16, textAlign:"center" }}>
+              Gata să economisești<br /><span style={GRAD_TXT}>mii de RON în avocați?</span>
+            </h2>
+            <p style={{ color:"#475569",fontSize:16,lineHeight:1.75,marginBottom:32,maxWidth:480,margin:"0 auto 32px" }}>
+              Alătură-te antreprenorilor care generează documente juridice profesionale cu AI, în loc de consulturi costisitoare.
+            </p>
+            <button onClick={onEnterApp} style={{ background:"linear-gradient(135deg,#818cf8,#6ee7b7)",border:"none",borderRadius:12,padding:"16px 40px",color:"#070d1a",fontFamily:"'Syne',sans-serif",fontWeight:700,fontSize:16,cursor:"pointer",boxShadow:"0 0 50px #818cf830",display:"inline-flex",alignItems:"center",gap:10 }}>
+              🚀 Încearcă gratuit — 10 credite
             </button>
+            <p style={{ color:"#2d3748",fontSize:12,marginTop:18 }}>Nu necesită card · GDPR compliant · Anulezi oricând</p>
           </div>
-
-          {/* Pro */}
-          <div className="pricing-card" style={{ background: "#0f172a", border: "2px solid #818cf840", borderRadius: 20, padding: isMobile ? 24 : 34, position: "relative", boxShadow: "0 0 50px #818cf815" }}>
-            <div style={{ position: "absolute", top: -14, left: "50%", transform: "translateX(-50%)", background: "linear-gradient(135deg,#818cf8,#6ee7b7)", borderRadius: 100, padding: "4px 18px", fontSize: 11, fontFamily: "'Syne',sans-serif", fontWeight: 700, color: "#070d1a", whiteSpace: "nowrap" }}>⚡ POPULAR</div>
-            <div style={{ display: "flex", alignItems: "center", gap: 10, marginBottom: 8 }}>
-              <span style={{ fontSize: 24 }}>⚡</span>
-              <span style={{ fontFamily: "'Syne',sans-serif", fontWeight: 800, fontSize: 20, color: "#e2e8f0" }}>Pro Business</span>
-            </div>
-            <div style={{ marginBottom: 24 }}>
-              <span style={{ fontFamily: "'Syne',sans-serif", fontWeight: 800, fontSize: 42, color: "#818cf8" }}>{billing === "lunar" ? "149" : "119"}</span>
-              <span style={{ color: "#64748b" }}> RON/lună</span>
-              {billing === "anual" && <div style={{ color: "#10b981", fontSize: 12, marginTop: 4 }}>Economisești 360 RON/an</div>}
-            </div>
-            <div style={{ display: "flex", flexDirection: "column", gap: 10, marginBottom: 26 }}>
-              {proF.map(([ok, txt], i) => (
-                <div key={i} style={{ display: "flex", alignItems: "flex-start", gap: 10, fontSize: 13, color: ok ? "#94a3b8" : "#334155" }}>
-                  <span style={{ color: ok ? "#818cf8" : "#334155", flexShrink: 0, fontWeight: 700 }}>{ok ? "✓" : "✗"}</span>{txt}
-                </div>
-              ))}
-            </div>
-            <button onClick={onEnterApp} style={{ width: "100%", background: "linear-gradient(135deg,#818cf8,#6ee7b7)", border: "none", borderRadius: 12, padding: 14, color: "#070d1a", fontFamily: "'Syne',sans-serif", fontWeight: 700, fontSize: 14, cursor: "pointer" }}>
-              Alege Pro Business
-            </button>
-          </div>
-        </div>
-        <div style={{ textAlign: "center", color: "#475569", fontSize: 13 }}>✓ Fără card de credit · ✓ Anulezi oricând · ✓ Facturare RON + TVA</div>
-      </section>
-
-      {/* ── CTA FINAL ───────────────────────────────────────────────── */}
-      <section style={{ ...S.section(), textAlign: "center" }}>
-        <div style={{ maxWidth: 640, margin: "0 auto", background: "linear-gradient(135deg,#818cf808,#6ee7b708)", border: "1px solid #818cf825", borderRadius: 24, padding: isMobile ? "40px 24px" : "60px 48px" }}>
-          <div style={{ fontSize: 48, marginBottom: 20 }}>⚖️</div>
-          <h2 style={{ ...S.h2, fontSize: isMobile ? 24 : 36, marginBottom: 16 }}>
-            Gata să economisești timp<br />și bani cu <span style={S.grad}>LexAI Pro</span>?
-          </h2>
-          <p style={{ color: "#64748b", fontSize: 16, marginBottom: 30, lineHeight: 1.7 }}>10 credite gratuite la înregistrare. Fără card de credit.</p>
-          <button onClick={onEnterApp}
-            style={{ background: "linear-gradient(135deg,#818cf8,#6ee7b7)", border: "none", borderRadius: 14, padding: "16px 42px", color: "#070d1a", fontFamily: "'Syne',sans-serif", fontWeight: 700, fontSize: 17, cursor: "pointer", boxShadow: "0 0 50px #818cf835" }}>
-            🚀 Creează Cont Gratuit
-          </button>
         </div>
       </section>
 
-      {/* ── FOOTER ──────────────────────────────────────────────────── */}
-      <footer style={{ background: "#050b16", padding: isMobile ? "48px 20px 28px" : "64px 5% 32px", position: "relative", zIndex: 1, borderTop: "1px solid #1e293b" }}>
-        <div style={{ display: "grid", gridTemplateColumns: isMobile ? "1fr 1fr" : "2fr 1fr 1fr 1fr", gap: isMobile ? 28 : 40, marginBottom: 40, maxWidth: 1100, margin: "0 auto 40px" }}>
-          <div style={{ gridColumn: isMobile ? "1/-1" : "auto" }}>
-            <div style={{ display: "flex", alignItems: "center", gap: 8, marginBottom: 14 }}>
-              <span>⚖️</span>
-              <span style={{ fontFamily: "'Syne',sans-serif", fontWeight: 800, fontSize: 17, color: "#e2e8f0" }}>Lex<span style={S.grad}>AI</span> Pro</span>
+      {/* ── FOOTER ─────────────────────────────────────────────────────── */}
+      <footer style={{ background:"#040a14",borderTop:"1px solid #1e293b",padding: isMobile ? "52px 20px 32px" : "68px 6% 36px" }}>
+        <div style={{ maxWidth:1100, margin:"0 auto" }}>
+          <div style={{ display:"grid", gridTemplateColumns: isMobile ? "1fr 1fr" : "2fr 1fr 1fr 1fr", gap: isMobile ? 32 : 48, marginBottom:48 }}>
+            <div style={{ gridColumn: isMobile ? "1/-1" : "auto" }}>
+              <div style={{ display:"flex",alignItems:"center",gap:8,marginBottom:16 }}>
+                <span style={{ fontSize:22 }}>⚖️</span>
+                <span style={{ fontFamily:"'Syne',sans-serif",fontWeight:800,fontSize:19 }}>
+                  Lex<span style={GRAD_TXT}>AI</span> Pro
+                </span>
+              </div>
+              <p style={{ color:"#334155",fontSize:13,lineHeight:1.75,maxWidth:280,margin:"0 0 20px" }}>Asistentul juridic AI pentru antreprenorii români — contracte, documente și analize în secunde.</p>
+              <div style={{ display:"flex",gap:8,flexWrap:"wrap" }}>
+                {["🔒 GDPR","🇷🇴 Made in RO","⚡ AI-Powered"].map(b => (
+                  <span key={b} style={{ background:"#0f172a",border:"1px solid #1e293b",borderRadius:100,padding:"5px 12px",fontSize:11,color:"#334155",whiteSpace:"nowrap" }}>{b}</span>
+                ))}
+              </div>
             </div>
-            <p style={{ color: "#475569", fontSize: 13, lineHeight: 1.7, margin: "0 0 16px", maxWidth: 280 }}>Asistentul juridic AI pentru antreprenorii români. Contracte, documente și analize juridice în secunde.</p>
-            <div style={{ display: "flex", gap: 8 }}>
-              {["🔒 GDPR", "🇷🇴 Made in RO", "⚡ AI-Powered"].map(b => (
-                <span key={b} style={{ background: "#1e293b", border: "1px solid #334155", borderRadius: 8, padding: "4px 10px", fontSize: 10, color: "#64748b", whiteSpace: "nowrap" }}>{b}</span>
-              ))}
-            </div>
-          </div>
-          <div>
-            <div style={{ fontFamily: "'Syne',sans-serif", fontWeight: 700, fontSize: 11, color: "#e2e8f0", marginBottom: 14, textTransform: "uppercase", letterSpacing: 1 }}>Produs</div>
-            {["Funcționalități", "Prețuri", "Changelog", "API Docs"].map(l => (
-              <div key={l} style={{ color: "#475569", fontSize: 13, marginBottom: 10, cursor: "pointer", transition: "color .15s" }} onMouseEnter={e => e.target.style.color = "#94a3b8"} onMouseLeave={e => e.target.style.color = "#475569"}>{l}</div>
+            {[
+              { title:"Produs", links:[["Funcționalități",()=>scrollTo("features")],["Cum funcționează",()=>scrollTo("steps")],["Prețuri",()=>scrollTo("pricing")]] },
+              { title:"Legal",  links:[["Termeni și Condiții",()=>setModal("terms")],["GDPR & Confidențialitate",()=>setModal("gdpr")],["Politica Cookies",()=>setModal("cookies")]] },
+              { title:"Suport", links:[["Contact",()=>setModal("contact")],["contact@lexaipro.ro",null]] },
+            ].map(col => (
+              <div key={col.title}>
+                <div style={{ fontFamily:"'Syne',sans-serif",fontWeight:700,fontSize:10,color:"#334155",textTransform:"uppercase",letterSpacing:"1px",marginBottom:18 }}>{col.title}</div>
+                {col.links.map(([lbl, fn]) => fn ? (
+                  <button key={lbl} onClick={fn} style={{ display:"block",background:"none",border:"none",color:"#334155",fontSize:13,marginBottom:11,cursor:"pointer",transition:"color .15s",lineHeight:1.5,padding:0,textAlign:"left",fontFamily:"'DM Sans',sans-serif" }}
+                    onMouseEnter={e=>{ e.currentTarget.style.color="#64748b"; }}
+                    onMouseLeave={e=>{ e.currentTarget.style.color="#334155"; }}>
+                    {lbl}
+                  </button>
+                ) : (
+                  <div key={lbl} style={{ color:"#334155",fontSize:13,marginBottom:11,lineHeight:1.5 }}>{lbl}</div>
+                ))}
+              </div>
             ))}
           </div>
-          <div>
-            <div style={{ fontFamily: "'Syne',sans-serif", fontWeight: 700, fontSize: 11, color: "#e2e8f0", marginBottom: 14, textTransform: "uppercase", letterSpacing: 1 }}>Companie</div>
-            {["Despre noi", "Blog", "Cariere", "Parteneri"].map(l => (
-              <div key={l} style={{ color: "#475569", fontSize: 13, marginBottom: 10, cursor: "pointer", transition: "color .15s" }} onMouseEnter={e => e.target.style.color = "#94a3b8"} onMouseLeave={e => e.target.style.color = "#475569"}>{l}</div>
-            ))}
-          </div>
-          <div>
-            <div style={{ fontFamily: "'Syne',sans-serif", fontWeight: 700, fontSize: 11, color: "#e2e8f0", marginBottom: 14, textTransform: "uppercase", letterSpacing: 1 }}>Legal</div>
-            {[["Termeni și Condiții", "terms"], ["GDPR & Confidențialitate", "gdpr"], ["Politica Cookies", "cookies"], ["Contact", "contact"]].map(([lbl, id]) => (
-              <button key={id} onClick={() => setModal(id)} style={{ display: "block", background: "none", border: "none", color: "#475569", fontSize: 13, marginBottom: 10, cursor: "pointer", padding: 0, fontFamily: "'DM Sans',sans-serif", textAlign: "left", transition: "color .15s" }} onMouseEnter={e => e.target.style.color = "#94a3b8"} onMouseLeave={e => e.target.style.color = "#475569"}>{lbl}</button>
-            ))}
-          </div>
-        </div>
-        <div style={{ borderTop: "1px solid #1e293b", paddingTop: 22, maxWidth: 1100, margin: "0 auto", display: "flex", flexDirection: isMobile ? "column" : "row", justifyContent: "space-between", gap: 12, alignItems: isMobile ? "flex-start" : "center" }}>
-          <div style={{ color: "#334155", fontSize: 12 }}>© 2025 LexAI Pro SRL · CUI: RO12345678 · J40/1234/2024</div>
-          <div style={{ color: "#475569", fontSize: 11, background: "#0f172a", border: "1px solid #f59e0b25", borderRadius: 8, padding: "7px 14px" }}>
-            ⚠️ Conținut informativ. Consultați un avocat autorizat.
+          <div style={{ borderTop:"1px solid #1e293b",paddingTop:24,display:"flex",flexDirection: isMobile ? "column" : "row",justifyContent:"space-between",gap:12,alignItems: isMobile ? "flex-start" : "center" }}>
+            <span style={{ color:"#1e293b",fontSize:12 }}>© 2025 LexAI Pro SRL · Toate drepturile rezervate.</span>
+            <span style={{ background:"#0a1220",border:"1px solid #f59e0b20",borderRadius:8,padding:"7px 14px",fontSize:11,color:"#374151" }}>⚠️ Conținut informativ — consultați un avocat autorizat</span>
           </div>
         </div>
       </footer>

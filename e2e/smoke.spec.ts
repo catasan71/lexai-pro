@@ -3,7 +3,7 @@ import { test, expect } from "@playwright/test";
 test.describe("Landing page", () => {
   test("loads with hero, nav and CTA", async ({ page }) => {
     await page.goto("/");
-    await expect(page.locator("h1")).toContainText("Asistentul juridic");
+    await expect(page.locator("h1")).toContainText("Documente juridice");
     await expect(page.getByRole("button", { name: /Începe Gratuit/i }).first()).toBeVisible();
   });
 
