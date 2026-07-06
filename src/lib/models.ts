@@ -23,7 +23,7 @@ export interface TaskConfig {
 
 export const TASK_CONFIG: Record<AiTask, TaskConfig> = {
   // Email: scurt, structurat → model rapid/ieftin.
-  email: { model: "claude-haiku-4-5-20251001", maxTokens: 1200, credits: 1 },
+  email: { model: "claude-haiku-4-5-20251001", maxTokens: 2000, credits: 1 },
   // Sugestii de clauze: necesită acuratețe juridică, dar output mic.
   clauses: { model: "claude-sonnet-4-6", maxTokens: 2000, credits: 2 },
   // Contract complet: calitate juridică ridicată, output mare.

@@ -17,6 +17,7 @@ export type ContentBlock =
 interface AnthropicResponse {
   content?: Array<{ type: string; text?: string }>;
   error?: { message?: string };
+  stop_reason?: string;
 }
 
 /**
@@ -32,6 +33,12 @@ export function extractJSON<T = unknown>(txt: string): T {
   if (fi !== -1) {
     const fe = s.indexOf(fence, fi + 3);
     s = fe === -1 ? s.slice(fi + 3) : s.slice(fi + 3, fe);
+    s = s.trim();
+    // Elimină eticheta de limbaj de pe prima linie (ex: "json") dacă există
+    const nl = s.indexOf("\n");
+    if (nl !== -1 && /^[a-zA-Z]+$/.test(s.slice(0, nl).trim())) {
+      s = s.slice(nl + 1);
+    }
   }
   s = s.trim();
   try {
@@ -111,6 +118,9 @@ export async function callClaude(task: AiTask, content: string | ContentBlock[])
   }
   const textBlock = data.content.find((b) => b.type === "text")?.text;
   if (!textBlock) throw new Error("Niciun bloc text in raspuns");
+  if (data.stop_reason === "max_tokens") {
+    throw new Error("Răspunsul AI a fost trunchiat (prea lung). Încearcă cu mai puține detalii sau reîncearcă.");
+  }
 
   // Propagă creditele rămase în UI fără a refresha din DB
   const remaining = r.headers.get("x-credits-remaining");
